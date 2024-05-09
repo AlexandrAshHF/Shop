@@ -1,0 +1,6 @@
+@CursVN.API_HostAddress = http://localhost:5299
+
+GET {{CursVN.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
