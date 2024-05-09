@@ -1,4 +1,4 @@
-﻿using CursVN.API.DTOs.Requests;
+﻿using CursVN.API.DTOs.Requests.Account;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;

@@ -5,7 +5,7 @@ namespace CursVN.Core.Abstractions.DataServices
     public interface IOrderService
     {
         List<Order> GetAll();
-        Order GetById(Guid Id);
+        Task<Order> GetById(Guid Id);
         List<Order> GetByUserId(Guid userId);
         List<Order> GetByProductId(Guid productId);
         Task<Guid> Create(Order order);

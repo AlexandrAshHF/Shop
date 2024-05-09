@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="AuthServices\" />
+    <Folder Include="Other\" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\CursVN.Core\CursVN.Core.csproj" />
+		<ProjectReference Include="..\CursVN.Persistance\CursVN.Persistance.csproj" />
+	</ItemGroup>
+
 </Project>

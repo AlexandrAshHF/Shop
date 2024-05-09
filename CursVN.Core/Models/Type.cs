@@ -2,7 +2,7 @@
 {
     public class Type
     {
-        private Type(Guid id, Guid parrentId, string name, List<Guid> parametersId,
+        private Type(Guid id, Guid? parrentId, string name, List<Guid> parametersId,
             List<Guid> productsId, Guid categoryId)
         {
             Id = id;
@@ -13,13 +13,13 @@
             CategoryId = categoryId;
         }
         public Guid Id { get; set; }
-        public Guid ParrentId { get; set; }
+        public Guid? ParrentId { get; set; }
         public string Name { get; set; }
         public List<Guid> ParametersId { get; set; }
         public List<Guid> ProductsId { get; set; }
         public Guid CategoryId { get; set; }
 
-        public static ModelWrapper<Type> Create(Guid id, Guid parrentId, string name, List<Guid> parametersId,
+        public static ModelWrapper<Type> Create(Guid id, Guid? parrentId, string name, List<Guid> parametersId,
             List<Guid> productsId, Guid categoryId)
         {
             return new ModelWrapper<Type>(

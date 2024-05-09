@@ -1,3 +1,4 @@
+using CursVN.API.DI;
 using CursVN.Persistance;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,10 @@ builder.Services.AddSwaggerGen();
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+
+builder.Services.AddDataServices();
+builder.Services.AddAuthServices();
+builder.Services.AddOtherServices();
 
 var app = builder.Build();
 

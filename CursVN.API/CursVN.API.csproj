@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CursVN.Application\CursVN.Application.csproj" />
     <ProjectReference Include="..\CursVN.Persistance\CursVN.Persistance.csproj" />
   </ItemGroup>
 

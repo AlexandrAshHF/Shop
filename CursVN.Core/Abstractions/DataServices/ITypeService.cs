@@ -3,7 +3,7 @@
     public interface ITypeService
     {
         List<Models.Type> GetAll();
-        Models.Type GetById(Guid Id);
+        Task<Models.Type> GetById(Guid Id);
         List<Models.Type> GetByParrentId(Guid id);
         List<Models.Type> GetByCategoryId(Guid id);
         Task<Guid> Create(Models.Type type);

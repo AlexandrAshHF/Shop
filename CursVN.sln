@@ -3,16 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursVN.API", "CursVN.API\CursVN.API.csproj", "{D9DF88A8-5184-4158-8563-2AE68B55DBF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursVN.API", "CursVN.API\CursVN.API.csproj", "{D9DF88A8-5184-4158-8563-2AE68B55DBF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursVN.Core", "CursVN.Core\CursVN.Core.csproj", "{F8CBE27A-1A1F-49C4-835D-AEDD8D073F01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursVN.Core", "CursVN.Core\CursVN.Core.csproj", "{F8CBE27A-1A1F-49C4-835D-AEDD8D073F01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursVN.Persistance", "CursVN.Persistance\CursVN.Persistance.csproj", "{C126F646-7B85-4266-9814-4E10AB2D943A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursVN.Persistance", "CursVN.Persistance\CursVN.Persistance.csproj", "{C126F646-7B85-4266-9814-4E10AB2D943A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F8CBE27A-1A1F-49C4-835D-AEDD8D073F01} = {F8CBE27A-1A1F-49C4-835D-AEDD8D073F01}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursVN.Application", "CursVN.Application\CursVN.Application.csproj", "{55745F0C-63AD-4A59-AA5B-6C9F0BB430AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursVN.Application", "CursVN.Application\CursVN.Application.csproj", "{55745F0C-63AD-4A59-AA5B-6C9F0BB430AD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F8CBE27A-1A1F-49C4-835D-AEDD8D073F01} = {F8CBE27A-1A1F-49C4-835D-AEDD8D073F01}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

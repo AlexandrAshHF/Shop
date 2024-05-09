@@ -1,4 +1,4 @@
-﻿namespace CursVN.API.DTOs.Requests
+﻿namespace CursVN.API.DTOs.Requests.Account
 {
     public class AccountRequest
     {
