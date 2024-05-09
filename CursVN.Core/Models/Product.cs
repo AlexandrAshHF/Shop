@@ -3,7 +3,7 @@
     public class Product
     {
         private Product(Guid id, string name, string description, decimal price,
-            byte discount, List<string> imageLinks, Guid typeId, List<string> paramValues)
+            byte discount, List<string> imageLinks, Guid typeId, List<List<string>> paramValues)
         {
             Id = id;
             Name = name;
@@ -22,9 +22,9 @@
         public byte Discount { get; set; }
         public List<string> ImageLinks { get; set; }
         public Guid TypeId { get; set; }
-        public List<string> ParamValues { get; set; }
+        public List<List<string>> ParamValues { get; set; }
         public static ModelWrapper<Product> Create(Guid id, string name, string description, decimal price,
-            byte discount, List<string> imageLinks, Guid typeId, List<string> paramValues)
+            byte discount, List<string> imageLinks, Guid typeId, List<List<string>> paramValues)
         {
             return new ModelWrapper<Product>(
                 model: new Product(id, name, description, price, discount, imageLinks, typeId, paramValues),

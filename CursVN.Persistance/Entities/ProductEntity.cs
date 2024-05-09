@@ -10,7 +10,7 @@
         public List<string> ImageLinks { get; set; }
         public TypeEntity Type { get; set; }
         public Guid TypeId { get; set; }
-        public List<string> ParamValues { get; set; }
+        public List<List<string>> ParamValues { get; set; }
         public List<OrderProduct> ProductsOrders { get; set; }
     }
 }

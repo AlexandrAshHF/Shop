@@ -21,11 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\CursVN.Persistance\CursVN.Persistance.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CursVN.Persistance\CursVN.Persistance.csproj" />
+    <Folder Include="DTOs\Responses\" />
   </ItemGroup>
 
 </Project>
