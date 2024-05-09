@@ -15,7 +15,8 @@ namespace CursVN.Persistance
         public DbSet<OrderProduct> OrdersProducts { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
-        { 
+        {
+            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 

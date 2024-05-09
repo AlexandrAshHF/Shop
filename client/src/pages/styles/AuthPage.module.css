@@ -1,0 +1,106 @@
+.main{
+    display: flex;
+    flex-direction: column;
+
+    padding: 15px 50px;
+    margin: 70px auto;
+    width: 400px;
+
+
+    background: linear-gradient(to bottom right, rgb(146, 131, 173), rgb(164, 133, 138));;
+    border-radius: 45px;
+    box-shadow: 0px 0px 20px rgb(169, 168, 168);
+
+    font-family: "Titillium Web", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    color: rgb(255, 248, 232);
+}
+
+.mainLabel{
+    margin: 0px auto;
+    margin-bottom: 30px;
+
+    font-size: xx-large;
+    text-shadow: 0px 0px 5px gray;
+}
+
+.inputs{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.inputBlock{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.inputBlock label{
+    margin-left: 10px;
+    font-size: large;
+    text-shadow: 0px 0px 5px gray;
+}
+
+.inputBlock input{
+    outline: none;
+    padding: none;
+    border: none;
+
+    text-align: center;
+    font-size: large;
+
+    height: 35px;
+    box-shadow: 0px 0px 15px gray;
+    border-radius: 90px;
+}
+
+.actionBlock{
+    margin: auto;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.actionBlock button{
+    outline: none;
+    border: none;
+    background: rgb(251, 251, 251);
+
+    width: 100px;
+    height: 35px;
+    font-size: large;
+    color: black;
+
+    box-shadow: 0px 0px 15px gray;
+    border-radius: 90px;
+
+    font-family: "Titillium Web", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.actionBlock button:hover{
+    cursor: pointer;
+    box-shadow: inset 0px 0px 5px gray;
+    font-size: medium;
+}
+
+.actionBlock label:hover{
+    cursor: pointer;
+}
+
+.actionBlock a{
+    color: rgb(181, 177, 170);
+    text-shadow: 0px 0px 5px gray;
+}
+
+.actionBlock a:hover{
+    cursor: pointer;
+}
