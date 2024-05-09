@@ -24,4 +24,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CursVN.Core\CursVN.Core.csproj" />
+  </ItemGroup>
+
 </Project>

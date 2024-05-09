@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursVN.Core", "CursVN.Core\CursVN.Core.csproj", "{F8CBE27A-1A1F-49C4-835D-AEDD8D073F01}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursVN.Persistance", "CursVN.Persistance\CursVN.Persistance.csproj", "{C126F646-7B85-4266-9814-4E10AB2D943A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F8CBE27A-1A1F-49C4-835D-AEDD8D073F01} = {F8CBE27A-1A1F-49C4-835D-AEDD8D073F01}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursVN.Application", "CursVN.Application\CursVN.Application.csproj", "{55745F0C-63AD-4A59-AA5B-6C9F0BB430AD}"
 EndProject

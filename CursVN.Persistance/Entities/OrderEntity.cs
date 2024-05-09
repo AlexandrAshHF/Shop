@@ -1,12 +1,7 @@
-﻿namespace CursVN.Persistance.Entities
+﻿using CursVN.Core.Models;
+
+namespace CursVN.Persistance.Entities
 {
-    public enum OrderStatus
-    {
-        None = 0,
-        Processed = 1,
-        Sent = 2,
-        Received = 3,
-    }
     public class OrderEntity
     {
         public Guid Id { get; set; }
