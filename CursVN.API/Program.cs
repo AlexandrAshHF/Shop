@@ -1,4 +1,6 @@
 using CursVN.API.DI;
+using CursVN.Application.Other;
+using CursVN.Core.Abstractions.Other;
 using CursVN.Persistance;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +16,7 @@ builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServe
 
 builder.Services.AddDataServices();
 builder.Services.AddAuthServices();
-builder.Services.AddOtherServices();
+builder.Services.AddScoped<IImageService, ImgBBService>(x => new ImgBBService(builder.Configuration["ApiKey"].ToString()));
 
 var app = builder.Build();
 
@@ -26,6 +28,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -1,7 +1,9 @@
 ﻿using CursVN.API.DTOs.Requests.Account;
+using CursVN.Core.Abstractions.AuthServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CursVN.API.Controllers
 {
@@ -9,16 +11,32 @@ namespace CursVN.API.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
+        private IUserService _userService;
+        public AccountsController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         [HttpPost("SignIn")]
         public async Task<IActionResult> SignIn([FromBody]AccountRequest request)
         {
-            return Ok();
+            var result = await _userService.LogIn(request.Email, request.Password);
+
+            if (result.IsValid)
+                return Ok(result);
+
+            return BadRequest(result.ErrorMessage);
         }
 
         [HttpPost("SignUp")]
         public async Task<IActionResult> SignUp([FromBody]AccountRequest request)
         {
-            return Ok();
+            var result = await _userService.SignUp(request.Email, request.Password);
+
+            if (result.IsValid)
+                return Ok(result);
+
+            return BadRequest(result.ErrorMessage);
         }
     }
 }

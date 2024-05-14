@@ -2,6 +2,7 @@
 using CursVN.API.DTOs.Requests.Admin;
 using CursVN.API.Filters;
 using CursVN.Core.Abstractions.DataServices;
+using CursVN.Core.Abstractions.Other;
 using CursVN.Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,13 +18,15 @@ namespace CursVN.API.Controllers
         private ITypeService _typeService;
         private IParameterService _parameterService;
         private IProductService _productService;
+        private IImageService _imageService;
         public AdminController(ICategoryService categoryService, ITypeService typeService,
-            IParameterService parameterService, IProductService productService)
+            IParameterService parameterService, IProductService productService, IImageService imageService)
         {
             _categoryService = categoryService;
             _typeService = typeService;
             _parameterService = parameterService;
             _productService = productService;
+            _imageService = imageService;
         }
 
         [HttpPut("CreateCategory")]
@@ -136,8 +139,19 @@ namespace CursVN.API.Controllers
         [HttpPut("CreateProduct")]
         public async Task<IActionResult> CreateProduct([FromBody] ProductRequest request)
         {
+            List<string>imgLinks = new List<string>();
+
+            foreach (var item in request.ImageLinks)
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    await item.CopyToAsync(ms);
+                    imgLinks.Add(await _imageService.Upload(ms));
+                }
+            }
+
             var model = Product.Create(Guid.NewGuid(), request.Name, request.Description, request.Price,
-                request.Discount ?? 0, request.Number, request.ImageLinks, request.TypeId, request.ParamValues);
+                request.Discount ?? 0, request.Number, imgLinks, request.TypeId, request.ParamValues);
 
             if(model.IsValid)
             {
@@ -151,8 +165,20 @@ namespace CursVN.API.Controllers
         [HttpPatch("UpdateProduct")]
         public async Task<IActionResult> UpdateProduct([FromBody] ProductRequest request)
         {
+            var product = await _productService.GetById(request.Id ?? throw new ArgumentNullException("id: null"));
+            List<string> imgLinks = product.ImageLinks;
+
+            foreach (var item in request.ImageLinks)
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    await item.CopyToAsync(ms);
+                    imgLinks.Add(await _imageService.Upload(ms));
+                }
+            }
+
             var model = Product.Create(request.Id ?? Guid.Empty, request.Name, request.Description, request.Price,
-                request.Discount ?? 0, request.Number, request.ImageLinks, request.TypeId, request.ParamValues);
+                request.Discount ?? 0, request.Number, imgLinks, request.TypeId, request.ParamValues);
 
             if (model.IsValid)
             {

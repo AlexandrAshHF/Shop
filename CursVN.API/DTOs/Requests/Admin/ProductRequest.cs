@@ -8,7 +8,7 @@
         public decimal Price { get; set; }
         public byte? Discount { get; set; }
         public uint Number { get; set; }
-        public List<string> ImageLinks { get; set; }
+        public List<IFormFile> ImageLinks { get; set; }
         public Guid TypeId { get; set; }
         public List<List<string>> ParamValues { get; set; }
     }

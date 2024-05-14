@@ -2,6 +2,6 @@
 {
     public interface IImageService
     {
-        string Upload(MemoryStream ms);
+        Task<string> Upload(MemoryStream ms);
     }
 }
