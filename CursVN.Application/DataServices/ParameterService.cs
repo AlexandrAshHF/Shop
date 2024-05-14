@@ -20,9 +20,9 @@ namespace CursVN.Application.DataServices
             {
                 Id = parameter.Id,
                 Name = parameter.Name,
-                Types = parameter.TypesId
-                .Select(x => new TypeEntity { Id = x })
-                .ToList()
+                Types = await _context.Types
+                    .Where(x => parameter.TypesId.Contains(x.Id))
+                    .ToListAsync()
             };
 
             await _context.Parameters.AddAsync(entity);
@@ -64,13 +64,22 @@ namespace CursVN.Application.DataServices
 
         public async Task<Guid> Update(Parameter parameter)
         {
-            var entity = new ParameterEntity
-            {
-                Id = parameter.Id,
-                Name = parameter.Name,
-                Types = parameter.TypesId.Select(x => new TypeEntity { Id = x }).ToList(),
-            };
+            var entity = await _context.Parameters
+                .Include(p => p.Types)
+                .SingleAsync(p => p.Id == parameter.Id);
 
+            entity.Types.Clear();
+
+            var types = await _context.Types
+                .Where(x => parameter.TypesId.Contains(x.Id))
+                .ToListAsync();
+
+            foreach (var type in types)
+            {
+                entity.Types.Add(type);
+            }
+
+            entity.Name = parameter.Name;
             _context.Parameters.Update(entity);
             await _context.SaveChangesAsync();
 

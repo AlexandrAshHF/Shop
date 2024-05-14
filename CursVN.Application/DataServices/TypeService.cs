@@ -20,13 +20,13 @@ namespace CursVN.Application.DataServices
                 Id = type.Id,
                 CategoryId = type.CategoryId,
                 Name = type.Name,
-                Parameters = type.ParametersId
-                        .Select(x => new ParameterEntity { Id = x })
-                        .ToList(),
+                Parameters = await _context.Parameters
+                        .Where(x => type.ParametersId.Contains(x.Id))
+                        .ToListAsync(),
                 ParrentId = type.ParrentId,
-                Products = type.ProductsId
-                        .Select(x => new ProductEntity { Id = x })
-                        .ToList()
+                Products = await _context.Products
+                        .Where(x => type.ProductsId.Contains(x.Id))
+                        .ToListAsync(),
             };
 
             await _context.Types.AddAsync(entity);
@@ -37,6 +37,19 @@ namespace CursVN.Application.DataServices
 
         public async Task Delete(Guid id)
         {
+            var entities = await _context.Types
+                .Where(x => x.ParrentId == id)
+                .Include(x => x.Parameters)
+                .Include(x => x.Products)
+                .ToListAsync();
+
+            foreach (var item in entities)
+            {
+                item.ParrentId = null;
+            }
+
+            _context.UpdateRange(entities);
+
             _context.Types.Remove(new TypeEntity { Id = id });
             await _context.SaveChangesAsync();
         }
@@ -51,7 +64,7 @@ namespace CursVN.Application.DataServices
 
             return entities.Select(x => Core.Models.Type.Create(
                     x.Id, x.ParrentId, x.Name, x.Parameters.Select(x => x.Id).ToList(),
-                    x.Products.Select(x => x.Id).ToList(), x.CategoryId
+                    x.Products.Select(x => x.Id).ToList(), x.CategoryId ?? Guid.Empty
                 ).Model).ToList();
         }
 
@@ -66,7 +79,7 @@ namespace CursVN.Application.DataServices
 
             return entities.Select(x => Core.Models.Type.Create(
                     x.Id, x.ParrentId, x.Name, x.Parameters.Select(x => x.Id).ToList(),
-                    x.Products.Select(x => x.Id).ToList(), x.CategoryId
+                    x.Products.Select(x => x.Id).ToList(), x.CategoryId ?? Guid.Empty
                 ).Model).ToList();
         }
 
@@ -80,7 +93,7 @@ namespace CursVN.Application.DataServices
 
             return Core.Models.Type.Create(
                     entity.Id, entity.ParrentId, entity.Name, entity.Parameters.Select(x => x.Id).ToList(),
-                    entity.Products.Select(x => x.Id).ToList(), entity.CategoryId
+                    entity.Products.Select(x => x.Id).ToList(), entity.CategoryId ?? Guid.Empty
                 ).Model;
         }
 
@@ -95,7 +108,7 @@ namespace CursVN.Application.DataServices
 
             return entities.Select(x => Core.Models.Type.Create(
                     x.Id, x.ParrentId, x.Name, x.Parameters.Select(x => x.Id).ToList(),
-                    x.Products.Select(x => x.Id).ToList(), x.CategoryId
+                    x.Products.Select(x => x.Id).ToList(), x.CategoryId ?? Guid.Empty
                 ).Model).ToList();
         }
 

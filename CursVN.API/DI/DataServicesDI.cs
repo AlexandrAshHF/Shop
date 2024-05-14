@@ -10,6 +10,9 @@ namespace CursVN.API.DI
             serviceCollection.AddScoped<ICategoryService, CategoryService>();
             serviceCollection.AddScoped<IOrderService, OrderService>();
             serviceCollection.AddScoped<IParameterService, ParameterService>();
+            serviceCollection.AddScoped<IPIOService, PIOService>();
+            serviceCollection.AddScoped<IProductService, ProductService>();
+            serviceCollection.AddScoped<ITypeService, TypeService>();
 
             return serviceCollection;
         }

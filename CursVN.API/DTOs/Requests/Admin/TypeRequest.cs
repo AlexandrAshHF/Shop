@@ -2,9 +2,10 @@
 {
     public class TypeRequest
     {
-        public Guid Id { get; set; }
-        public Guid? ParrentId { get; set; }
+        public string? Id { get; set; }
+        public string? ParrentId { get; set; }
         public string Name { get; set; }
         public List<Guid> ParametersId { get; set; }
+        public Guid CategoryId { get; set; }
     }
 }

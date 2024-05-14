@@ -4,7 +4,12 @@ export default function ProductPage({...params})
 {
     return(
         <div {...params}>
-            product
+            <div>
+
+            </div>
+            <div>
+                
+            </div>
         </div>
     )
 }

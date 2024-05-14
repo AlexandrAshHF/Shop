@@ -19,9 +19,9 @@ namespace CursVN.Application.DataServices
             {
                 Id = category.Id,
                 Name = category.Name,
-                Types = category.TypesId
-                    .Select(x => new TypeEntity { Id = x })
-                    .ToList()
+                Types = await _context.Types
+                    .Where(x => category.TypesId.Contains(x.Id))
+                    .ToListAsync()
             };
 
             await _context.AddAsync(entity);
@@ -32,6 +32,17 @@ namespace CursVN.Application.DataServices
 
         public async Task Delete(Guid id)
         {
+            var types = await _context.Types
+                .Where(x => x.CategoryId == id)
+                .ToListAsync();
+
+            foreach (var item in types)
+            {
+                item.CategoryId = null;
+            }
+
+            _context.Types.UpdateRange(types);
+
             _context.Remove(new CategoryEntity { Id = id });
             await _context.SaveChangesAsync();
         }
@@ -66,9 +77,9 @@ namespace CursVN.Application.DataServices
             {
                 Id = category.Id,
                 Name = category.Name,
-                Types = category.TypesId
-                    .Select(x => new TypeEntity { Id = x })
-                    .ToList()
+                Types = await _context.Types
+                    .Where(x => category.TypesId.Contains(x.Id))
+                    .ToListAsync()
             };
 
             _context.Update(entity);

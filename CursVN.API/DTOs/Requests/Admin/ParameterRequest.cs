@@ -2,6 +2,8 @@
 {
     public class ParameterRequest
     {
+        public string? Id { get; set; }
         public string Name { get; set; }
+        public List<Guid>? TypesId { get; set; }
     }
 }

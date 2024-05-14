@@ -23,7 +23,7 @@ namespace CursVN.Persistance.Configurations
             builder.HasOne(x => x.Category)
                 .WithMany(x => x.Types)
                 .HasForeignKey(x => x.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

@@ -8,6 +8,6 @@
         public List<ParameterEntity> Parameters { get; set; }
         public List<ProductEntity> Products { get; set; }
         public CategoryEntity Category { get; set; }
-        public Guid CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
     }
 }
