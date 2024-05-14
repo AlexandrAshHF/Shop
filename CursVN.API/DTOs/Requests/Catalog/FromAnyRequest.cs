@@ -3,6 +3,6 @@
     public class FromAnyRequest
     {
         public Guid id { get; set; }
-        public RangeRequest Range { get; set; }
+        public RangeRequest? Range { get; set; }
     }
 }

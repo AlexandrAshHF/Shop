@@ -21,7 +21,8 @@ namespace CursVN.Application.DataServices
                 Name = category.Name,
                 Types = await _context.Types
                     .Where(x => category.TypesId.Contains(x.Id))
-                    .ToListAsync()
+                    .ToListAsync(),
+                ImageLink = category.ImageLink,
             };
 
             await _context.AddAsync(entity);
@@ -57,7 +58,7 @@ namespace CursVN.Application.DataServices
             return entites
                 .Select(x => 
                     Category.Create(x.Id, x.Name, x.Types.Select(t => t.Id)
-                    .ToList()).Model)
+                    .ToList(), x.ImageLink).Model)
                 .ToList();
         }
 
@@ -68,7 +69,7 @@ namespace CursVN.Application.DataServices
                 .Include(x => x.Types)
                 .FirstAsync(X => X.Id == id);
 
-            return Category.Create(entity.Id, entity.Name, entity.Types.Select(t => t.Id).ToList()).Model;
+            return Category.Create(entity.Id, entity.Name, entity.Types.Select(t => t.Id).ToList(), entity.ImageLink).Model;
         }
 
         public async Task<Guid> Update(Category category)
@@ -79,7 +80,8 @@ namespace CursVN.Application.DataServices
                 Name = category.Name,
                 Types = await _context.Types
                     .Where(x => category.TypesId.Contains(x.Id))
-                    .ToListAsync()
+                    .ToListAsync(),
+                ImageLink = category.ImageLink,
             };
 
             _context.Update(entity);

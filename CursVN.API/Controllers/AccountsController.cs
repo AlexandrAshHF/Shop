@@ -23,7 +23,10 @@ namespace CursVN.API.Controllers
             var result = await _userService.LogIn(request.Email, request.Password);
 
             if (result.IsValid)
-                return Ok(result);
+            {
+                string response = "Bearer " + result.Model;
+                return Ok(response);
+            }
 
             return BadRequest(result.ErrorMessage);
         }
@@ -34,7 +37,10 @@ namespace CursVN.API.Controllers
             var result = await _userService.SignUp(request.Email, request.Password);
 
             if (result.IsValid)
-                return Ok(result);
+            {
+                string response = "Bearer " + result.Model;
+                return Ok(response);
+            }
 
             return BadRequest(result.ErrorMessage);
         }

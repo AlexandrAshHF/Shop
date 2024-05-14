@@ -6,6 +6,7 @@ using CursVN.Core.Abstractions.Other;
 using CursVN.Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CursVN.API.Controllers
 {
@@ -32,7 +33,15 @@ namespace CursVN.API.Controllers
         [HttpPut("CreateCategory")]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryRequest request)
         {
-            var model = Category.Create(Guid.NewGuid(), request.Name, request.TypesId ?? new List<Guid>());
+            MemoryStream ms = new MemoryStream();
+            string link = string.Empty;
+            if (request.Image!=null)
+            {
+                await request.Image.CopyToAsync(ms);
+                link = await _imageService.Upload(ms);
+            }
+            
+            var model = Category.Create(Guid.NewGuid(), request.Name, request.TypesId ?? new List<Guid>(), link);
 
             if (model.IsValid)
             {
@@ -46,7 +55,20 @@ namespace CursVN.API.Controllers
         [HttpPatch("UpdateCategory")]
         public async Task<IActionResult> UpdateCategory([FromBody] CategoryRequest request)
         {
-            var model = Category.Create(Guid.Parse(request.Id), request.Name, request.TypesId ?? new List<Guid>());
+            MemoryStream ms = new MemoryStream();
+            string link = string.Empty;
+            if (request.Image!=null)
+            {
+                await request.Image.CopyToAsync(ms);
+                link = await _imageService.Upload(ms);
+            }
+
+            var category = await _categoryService.GetById(Guid.Parse(request.Id));
+
+            if(!category.ImageLink.IsNullOrEmpty() && link.IsNullOrEmpty())
+                link = category.ImageLink;
+
+            var model = Category.Create(Guid.Parse(request.Id), request.Name, request.TypesId ?? new List<Guid>(), link);
 
             if (model.IsValid)
             {
