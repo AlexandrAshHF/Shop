@@ -13,6 +13,7 @@ namespace CursVN.Persistance
         public DbSet<OrderEntity> Orders { get; set; }
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<OrderProduct> OrdersProducts { get; set; }
+        public DbSet<ParamValues> ParamValues { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {

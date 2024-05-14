@@ -41,7 +41,13 @@ namespace CursVN.Application.DataServices
 
         public async Task Delete(Guid id)
         {
-            _context.Products.Remove(new ProductEntity { Id = id });
+            var entity = await _context.Products
+                .Include(x => x.ParamValues)
+                .SingleAsync();
+
+            entity.ParamValues = new List<ParamValues>();
+
+            _context.Products.Remove(entity);
             await _context.SaveChangesAsync();
         }
 
@@ -120,15 +126,17 @@ namespace CursVN.Application.DataServices
                 Name = product.Name,
                 ImageLinks = product.ImageLinks,
                 Number = product.Number,
-                ParamValues = product.ParamValues
-                               .Select(x => new ParamValues
-                               {
-                                   Id = Guid.NewGuid(),
-                                   Values = x
-                               }).ToList(),
+                ParamValues = await _context.ParamValues
+                    .Where(x => x.ProductEntityId == product.Id)
+                    .ToListAsync(),
                 Price = product.Price,
                 TypeId = product.TypeId,
             };
+
+            for(int i = 0; i < entity.ParamValues.Count; i++)
+            {
+                entity.ParamValues[i].Values = product.ParamValues[i];
+            }
 
             _context.Update(entity);
             await _context.SaveChangesAsync();

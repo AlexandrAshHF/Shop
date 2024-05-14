@@ -1,4 +1,5 @@
-﻿using CursVN.API.DTOs.Requests.Admin;
+﻿using Azure.Core;
+using CursVN.API.DTOs.Requests.Admin;
 using CursVN.API.Filters;
 using CursVN.Core.Abstractions.DataServices;
 using CursVN.Core.Models;
@@ -133,21 +134,40 @@ namespace CursVN.API.Controllers
         }
 
         [HttpPut("CreateProduct")]
-        public async Task<IActionResult> CreateProduct()
+        public async Task<IActionResult> CreateProduct([FromBody] ProductRequest request)
         {
-            return Ok();
+            var model = Product.Create(Guid.NewGuid(), request.Name, request.Description, request.Price,
+                request.Discount ?? 0, request.Number, request.ImageLinks, request.TypeId, request.ParamValues);
+
+            if(model.IsValid)
+            {
+                var result = await _productService.Create(model.Model);
+                return Ok(result);
+            }
+
+            return BadRequest(model.ErrorMessage);
         }
 
         [HttpPatch("UpdateProduct")]
-        public async Task<IActionResult> UpdateProduct()
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductRequest request)
         {
-            return Ok();
+            var model = Product.Create(request.Id ?? Guid.Empty, request.Name, request.Description, request.Price,
+                request.Discount ?? 0, request.Number, request.ImageLinks, request.TypeId, request.ParamValues);
+
+            if (model.IsValid)
+            {
+                var result = await _productService.Update(model.Model);
+                return Ok(result);
+            }
+
+            return BadRequest(model.ErrorMessage);
         }
 
         [HttpDelete("DeleteProduct")]
         public async Task<IActionResult> DeleteProduct([FromBody] Guid id)
         {
-            return Ok();
+            await _productService.Delete(id);
+            return Ok(id);
         }
     }
 }
