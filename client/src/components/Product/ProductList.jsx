@@ -6,7 +6,7 @@ export default function ProductList({products, selectedList, ...props}){
     return(
         <div className={classes.main} {...props}>
             {products.map((item) => (
-                <ProductItem product={item} isSelected={selectedList.findIndex(x => x == item.id) >= 0}/>         
+                <ProductItem key={item.id} product={item} isSelected={selectedList.findIndex(x => x == item.id) >= 0}/>         
             ))}
         </div>
     )
