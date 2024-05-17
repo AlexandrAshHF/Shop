@@ -1,0 +1,16 @@
+.main{
+    height: 35px;
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+
+    box-shadow: -10px 0px 5px gray;
+}
+
+.searchLine{
+    outline: none;
+    border: 1px solid rgb(188, 188, 188);
+    border-radius: 10px;
+
+    text-align: center;
+}

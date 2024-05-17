@@ -20,7 +20,8 @@ namespace CursVN.API.Controllers
         private IParameterService _parameterService;
         private IProductService _productService;
         private IImageService _imageService;
-        public AdminController(ICategoryService categoryService, ITypeService typeService,
+        private string adminKey;
+        public AdminController(ICategoryService categoryService, ITypeService typeService, IConfiguration configuration,
             IParameterService parameterService, IProductService productService, IImageService imageService)
         {
             _categoryService = categoryService;
@@ -28,10 +29,20 @@ namespace CursVN.API.Controllers
             _parameterService = parameterService;
             _productService = productService;
             _imageService = imageService;
+            adminKey = configuration["AdminKey"];
+        }
+
+        [HttpPost("CheckKey")]
+        public IActionResult CheckKey(string key)
+        {
+            if (key == adminKey)
+                return Ok();
+
+            return BadRequest();
         }
 
         [HttpPut("CreateCategory")]
-        public async Task<IActionResult> CreateCategory([FromBody] CategoryRequest request)
+        public async Task<IActionResult> CreateCategory([FromForm] CategoryRequest request)
         {
             MemoryStream ms = new MemoryStream();
             string link = string.Empty;
@@ -53,7 +64,7 @@ namespace CursVN.API.Controllers
         }
 
         [HttpPatch("UpdateCategory")]
-        public async Task<IActionResult> UpdateCategory([FromBody] CategoryRequest request)
+        public async Task<IActionResult> UpdateCategory([FromForm] CategoryRequest request)
         {
             MemoryStream ms = new MemoryStream();
             string link = string.Empty;
@@ -158,8 +169,8 @@ namespace CursVN.API.Controllers
             return Ok(id);
         }
 
-        [HttpPut("CreateProduct")]
-        public async Task<IActionResult> CreateProduct([FromBody] ProductRequest request)
+        [HttpPost("CreateProduct")]
+        public async Task<IActionResult> CreateProduct([FromForm] ProductRequest request)
         {
             List<string>imgLinks = new List<string>();
 
@@ -172,8 +183,11 @@ namespace CursVN.API.Controllers
                 }
             }
 
+            List<List<string>> list = new List<List<string>>();
+            list.Add(request.ParamValues);
+
             var model = Product.Create(Guid.NewGuid(), request.Name, request.Description, request.Price,
-                request.Discount ?? 0, request.Number, imgLinks, request.TypeId, request.ParamValues);
+                (byte)request.Discount, (uint)request.Number, imgLinks, request.TypeId, list);
 
             if(model.IsValid)
             {
@@ -185,9 +199,12 @@ namespace CursVN.API.Controllers
         }
 
         [HttpPatch("UpdateProduct")]
-        public async Task<IActionResult> UpdateProduct([FromBody] ProductRequest request)
+        public async Task<IActionResult> UpdateProduct([FromForm] ProductRequest request)
         {
-            var product = await _productService.GetById(request.Id ?? throw new ArgumentNullException("id: null"));
+            var product = await _productService.GetById(request.Id.IsNullOrEmpty() 
+                ?  throw new ArgumentNullException("Id cannot be null")
+                : Guid.Parse(request.Id));
+
             List<string> imgLinks = product.ImageLinks;
 
             foreach (var item in request.ImageLinks)
@@ -199,8 +216,11 @@ namespace CursVN.API.Controllers
                 }
             }
 
-            var model = Product.Create(request.Id ?? Guid.Empty, request.Name, request.Description, request.Price,
-                request.Discount ?? 0, request.Number, imgLinks, request.TypeId, request.ParamValues);
+            List<List<string>> list = new List<List<string>>();
+            list.Add(request.ParamValues);
+
+            var model = Product.Create(Guid.Parse(request.Id), request.Name, request.Description, request.Price,
+                (byte)request.Discount, (uint)request.Number, imgLinks, request.TypeId, list);
 
             if (model.IsValid)
             {

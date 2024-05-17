@@ -6,13 +6,14 @@ import CategoryPage from "./pages/CategoryPage";
 import DefaultPage from "./pages/DefaultPage";
 import ProductPage from "./pages/ProductPage";
 import ProfilePage from "./pages/ProfilePage";
-import AuthPage from "./pages/AuthPage"
+import AuthPage from "./pages/AuthPage";
+import BasketPage from "./pages/BasketPage"
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<DefaultPage />} />
+        <Route index element={<CategoryPage />} />
         <Route path="/admin/:adminKey" element={<AdminPage />} />
         <Route path="/catalog/*" element={<CatalogPage />} />
         <Route path="/catalog/:categoryId/*" element={<CatalogPage />} />
@@ -22,7 +23,8 @@ function App() {
         <Route path="/product/:productId" element={<ProductPage />} />
         <Route path="/profile/:userId" element={<ProfilePage />} />
         <Route path="/account/:type" element={<AuthPage />} />
-        <Route path="*" element={<DefaultPage />} />
+        <Route path="/basket" element={<BasketPage/>}/>
+        <Route path="*" element={<CategoryPage />} />
       </Routes>
     </BrowserRouter>
   );

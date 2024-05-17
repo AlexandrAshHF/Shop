@@ -1,0 +1,21 @@
+.main{
+    width: 100%;
+    height: 100%;
+
+    margin: 10px 10px;
+}
+
+.btns{
+    display: flex;
+    flex-direction: row;
+
+    gap: 25px;
+}
+
+.btns button{
+    width: 100px;
+}
+
+.selected{
+    background-color: gray
+}

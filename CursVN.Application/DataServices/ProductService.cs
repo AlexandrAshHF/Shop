@@ -43,7 +43,7 @@ namespace CursVN.Application.DataServices
         {
             var entity = await _context.Products
                 .Include(x => x.ParamValues)
-                .SingleAsync();
+                .SingleAsync(x => x.Id == id);
 
             entity.ParamValues = new List<ParamValues>();
 

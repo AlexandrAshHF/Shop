@@ -24,6 +24,8 @@
 
     display: flex;
     flex-direction: column;
+
+    outline: none;
 }
 
 .item:hover{

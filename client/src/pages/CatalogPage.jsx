@@ -1,27 +1,92 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./styles/CatalogPage.module.css";
 import ProductList from "../components/Product/ProductList";
+import { useParams } from "react-router-dom";
 
 export default function CatalogPage({...params})
 {
-    let prod = {id: 1, name: "name", description: "descriptiron321312312123132132123123132132 1 2 4 5 6 60234023", price: 12.5, discount: 0.3, 
-    imageLinks: ["https://upload.wikimedia.org/wikipedia/en/thumb/e/e2/IMG_Academy_Logo.svg/1200px-IMG_Academy_Logo.svg.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFXOOcZnaslyfjPTGV4q_PlLC9Ypmg8kzTgBP5Nrg_FA&s"]}
-    
-    let prod1 = {id: 2, name: "name1", description: "descriptiron321312312123132132123123132132 1 2 4 5 6 60234023", price: 12.5, discount: 0.3, 
-    imageLinks: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFXOOcZnaslyfjPTGV4q_PlLC9Ypmg8kzTgBP5Nrg_FA&s", "https://upload.wikimedia.org/wikipedia/en/thumb/e/e2/IMG_Academy_Logo.svg/1200px-IMG_Academy_Logo.svg.png"]}
+    const {categoryId, typeId} = useParams();
+    const[products, SetProducts] = useState([]);
+    const[types, SetTypes] = useState([]);
+    const[selectedProds, SetSelectedProds] = useState([]);
+    const[selectedType, SetSelectedType] = useState();
+    const[searchLine, SetSearch] = useState();
 
-    let prod2 = {id: 3, name: "name1", description: "descriptiron321312312123132132123123132132 1 2 4 5 6 60234023", price: 12.5, discount: 0.3, 
-    imageLinks: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFXOOcZnaslyfjPTGV4q_PlLC9Ypmg8kzTgBP5Nrg_FA&s", "https://upload.wikimedia.org/wikipedia/en/thumb/e/e2/IMG_Academy_Logo.svg/1200px-IMG_Academy_Logo.svg.png"]}
-    
-    let prod3 = {id: 3, name: "name1", description: "descriptiron321312312123132132123123132132 1 2 4 5 6 60234023", price: 12.5, discount: 0.3, 
-    imageLinks: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFXOOcZnaslyfjPTGV4q_PlLC9Ypmg8kzTgBP5Nrg_FA&s", "https://upload.wikimedia.org/wikipedia/en/thumb/e/e2/IMG_Academy_Logo.svg/1200px-IMG_Academy_Logo.svg.png"]}
-    
-    let arr = [prod, prod1, prod2, prod3];
-    let selected = [1];
+    async function fetchProducts(){
+        if(typeId !== null && typeId !== undefined){
+            let response = await fetch(`https://localhost:7265/api/Catalog/GetByType?id=${typeId}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if(response.ok){
+                let data = await response.json();
+                SetProducts(data);
+            }
+        }
+
+        else if(categoryId !== null && categoryId !== undefined){
+            let response = await fetch(`https://localhost:7265/api/Catalog/GetByCategory?id=${categoryId}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if(response.ok){
+                let data = await response.json();
+                SetProducts(data);
+            }
+        }
+
+        else{
+            let response = await fetch(`https://localhost:7265/api/Catalog/GetAll`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if(response.ok){
+                let data = await response.json();
+                SetProducts(data);
+            }
+        }
+    }
+
+    async function fetchTypes(){
+        if(categoryId !== null && categoryId !== undefined){
+            let response = await fetch(`https://localhost:7265/api/CTP/GetTypesByCId?id=${categoryId}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if(response.ok){
+                let data = await response.json();
+                SetTypes(data);
+            }
+        }
+    }
+
+    useEffect(() => {
+        fetchProducts();
+        fetchTypes();
+    }, [])
 
     return(
         <div {...params} className={classes.main}>
-            <ProductList products={arr} selectedList={selected}/>
+            <div className={classes.types}>
+                {types.map((item) => (
+                    <button>
+                        <label>{item.name}</label>
+                    </button>
+                ))}
+            </div>
+            <ProductList products={products} selectedList={selectedProds}/>
         </div>
     )
 }
