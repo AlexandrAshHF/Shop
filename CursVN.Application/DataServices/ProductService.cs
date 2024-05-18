@@ -78,9 +78,20 @@ namespace CursVN.Application.DataServices
                     ).Model).ToList();
         }
 
-        public Task<Product> GetById(Guid id)
+        public async Task<Product> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            var entity = await _context.Products
+                .Include(x => x.ParamValues)
+                .SingleAsync(x => x.Id == id);
+
+            List<List<string>> list = new List<List<string>>();
+            foreach (var item in entity.ParamValues)
+            {
+                list.Add(item.Values);
+            }
+
+            return Product.Create(entity.Id, entity.Name, entity.Description, entity.Price, entity.Discount,
+                entity.Number, entity.ImageLinks, entity.TypeId, list).Model;
         }
 
         public List<Product> GetByOrderId(Guid id)

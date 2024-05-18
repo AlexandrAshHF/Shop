@@ -8,6 +8,7 @@ namespace CursVN.Persistance.Entities
         public DateTime DateOfCreate { get; set; }
         public OrderStatus Status { get; set; }
         public List<OrderProduct> ProductsOrders { get; set; }
+        public decimal Amount { get; set; }
         public UserEntity User { get; set; }
         public Guid UserId { get; set; }
     }

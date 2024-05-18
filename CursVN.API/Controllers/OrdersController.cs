@@ -26,6 +26,7 @@ namespace CursVN.API.Controllers
         public IActionResult GetAll()
         {
             var result = _orderService.GetAll();
+            
             return Ok(result);
         }
 
@@ -46,6 +47,7 @@ namespace CursVN.API.Controllers
         public async Task<IActionResult> CreateOrder([FromBody] List<Guid> productsId)
         {
             var userId = User.FindFirst("userId")?.Value;
+            decimal amount = 0;
 
             if (userId == null)
                 return BadRequest("UserId is null");
@@ -66,8 +68,15 @@ namespace CursVN.API.Controllers
                 }
             }
 
+            foreach (var item in pio)
+            {
+                var currentProd = await _productService.GetById(item.Item1);
+                decimal disc = (decimal)currentProd.Discount / 100;
+                amount += (currentProd.Price - currentProd.Price * disc) * item.Item2;
+            }
+
             var order = Order.Create(orderId, DateTime.Now, OrderStatus.Processed,
-                pio.Select(x => ProductInOrder.Create(x.Item1, orderId, x.Item2).Model).ToList(), Guid.Parse(userId));
+                pio.Select(x => ProductInOrder.Create(x.Item1, orderId, x.Item2).Model).ToList(), amount, Guid.Parse(userId));
 
             var result = await _orderService.Create(order.Model);
 

@@ -1,37 +1,42 @@
 import React from "react";
-import classes from "./styles/ProductTable.module.css";
 import {Table, Button} from "react-bootstrap";
 
-export default function ProductTable({products, ...params}){
+export default function ProductTable({products, editClick, delClick, ...params}){
     return(
-        <div className={classes.main}>
-            {products.map((item) => (
-                <Table className={classes.tableItem} style={{backgroundColor: "lightgray"}}>
+        <div style={{padding: 10, display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <Table style={{backgroundColor: "lightgray", textAlign: "center"}}>
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                            <th>Discount</th>
-                            <th>ImageLinks</th>
+                            <th style={{width:250}}>Name</th>
+                            <th style={{width:350}}>Description</th>
+                            <th style={{width:100}}>Sizes</th>
+                            <th style={{width:60}}>Price</th>
+                            <th style={{width:60}}>Discount</th>
+                            <th style={{width:200}}>ImageLinks</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {products.map((item) => (
                         <tr>
-                            <td>{item.name}</td>
-                            <td>{item.description}</td>
-                            <td>{item.price}</td>
-                            <td>{item.discount}</td>
-                            <td>{item.imageLinks}</td>
-                            <td>
-                                <Button variant="primary">Редактировать</Button>{' '}
-                                <Button variant="danger">Удалить</Button>
+                            <td style={{whiteSpace: "normal"}}>{item.name}</td>
+                            <td style={{whiteSpace: "normal"}}>{item.description}</td>
+                            <td style={{whiteSpace: "normal"}}>
+                                {item.paramValues[0].map((item) => (
+                                    <p style={{display: "inline-block", marginRight: "5px"}}>{item}</p>
+                                ))}
                             </td>
-                        </tr>
+                            <td style={{whiteSpace: "normal"}}>{item.price}</td>
+                            <td style={{whiteSpace: "normal"}}>{item.discount}</td>
+                            <td style={{whiteSpace: "normal"}}>{item.imageLinks}</td>
+                            <td style={{display: "flex", flexDirection: "column", alignItems: "center",
+                                gap: 5}}>
+                                <Button style={{width: 100}} variant="primary" onClick={() => editClick(item)}>Edit</Button>{' '}
+                                <Button style={{width: 100}} variant="danger" onClick={() => delClick(item)}>Delete</Button>
+                            </td>
+                        </tr>))}
                     </tbody>
                 </Table>
-            ))}
         </div>
     )
 }

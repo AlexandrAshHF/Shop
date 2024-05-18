@@ -5,47 +5,20 @@ import { useParams } from "react-router-dom";
 import classes from "./styles/AdminPage.module.css";
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import Select from "react-select";
+import ModalProduct from "../components/Product/ModalProduct";
 
 export default function AdminPage({...params})
 {
     const[page, SetPage] = useState(false);
     const {adminKey} = useParams();
 
+    const[selectedProd, SetSelectedProd] = useState(null);
+
+    const [modalVisible, setModalVisible] = useState(false);
+
     const [products, SetProducts] = useState([]);
     const [orders, SetOrders] = useState([]);
     const [types, SetTypes] = useState([]);
-
-    const options = [
-        {value: 'XS', label: 'Size XS'},
-        {value: 'S', label: 'Size S'},
-        {value: 'M', label: 'Size M'},
-        {value: 'L', label: 'Size L'},
-        {value: 'XL', label: 'Size XL'},
-    ]
-
-    const opthTypes = types.map(item => ({
-        value: item.id,
-        label: item.name
-    }));
-
-    const [selectedType, SetSelectedType] = useState();
-
-    const [selectedOpth, SetSelectedOpth] = useState([]);
-
-    const [images, setImages] = useState([]);
-    const handleImageUpload = event => {
-        setImages([...images, ...event.target.files]);
-    };
-
-    const handleChange = (selectedOpth) => {
-        SetSelectedOpth(selectedOpth);
-        console.log(`Option selected:`, selectedOpth);
-    };
-
-    const handleChangeType = (selectedType) => {
-        SetSelectedType(selectedType);
-        console.log(selectedType);
-    }
 
     async function fetchProducts(){
         let response = await fetch("https://localhost:7265/api/Catalog/GetAll",{
@@ -89,45 +62,6 @@ export default function AdminPage({...params})
         }
     }
 
-    const[name, SetName] = useState();
-    const[description, SetDescription] = useState();
-    const[price, SetPrice] = useState();
-    const[discount, SetDiscount] = useState();
-    const[number, SetNumber] = useState();
-
-    async function createProduct(){
-        let formData = new FormData();
-        formData.append("Id", "");
-        formData.append("Name", name);
-        formData.append("Description", description);
-        formData.append("Price", price);
-        formData.append("Discount", discount);
-        formData.append("Number", number);
-
-        for (let i = 0; i < images.length; i++) {
-            formData.append("ImageLinks", images[i]);
-            console.log(images[i]);
-        }
-        formData.append("TypeId", selectedType.value);
-        console.log(selectedType.value);
-
-        for (let i = 0; i < opthTypes.length; i++){
-            console.log(opthTypes[i].value)
-            formData.append("ParamValues", opthTypes[i].value);
-        }
-
-        console.log(formData.values);
-    
-        let key = prompt("Input admin key");
-        let response = await fetch(`https://localhost:7265/api/Admin/${key}/CreateProduct`, {
-            method: "POST",
-            body: formData
-        })
-    
-        if(response.ok)
-            window.location.reload();
-    }
-
     async function UpdateOrder(order){
         let nextStatus = order.status + 1;
 
@@ -149,6 +83,22 @@ export default function AdminPage({...params})
             console.log(await response.json())
     }
 
+    async function DeleteProduct(prod){
+        let response = await fetch(`https://localhost:7265/api/Admin/${adminKey}/DeleteProduct`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',                
+            },
+            body: prod.id
+        })
+
+        if(response.ok)
+            window.location.reload();
+
+        else
+            console.log(await response.json());
+    }
+
     useEffect(() =>{
         fetchProducts();
         fetchOrders();
@@ -157,85 +107,27 @@ export default function AdminPage({...params})
 
     return(
         <div {...params} className={classes.main}>
+            {modalVisible && (
+                <ModalProduct product={selectedProd} types={types} adminKey={adminKey} 
+                closeWindow={() => {setModalVisible(false); SetSelectedProd(null)}}/>
+            )}
             <div className={classes.btns}>
                 <Button className={!page ? classes.selected : classes.unselected} onClick={() => SetPage(false)}>Products</Button>
                 <Button className={page ? classes.selected : classes.unselected} onClick={() => SetPage(true)}>Orders</Button>
             </div>
+            <Button variant="success" onClick={() => {SetSelectedProd(null); setModalVisible(true)}}
+                style={{marginTop: 20, marginBottom: 20, width: 100}}>
+                Create
+            </Button>
             {!page && (
                 <div>
-                    <Container style={{ marginTop: '15px', marginBottom: '15px', marginLeft: '50px', marginRight: '50px' }}>
-                        <Row className="justify-content-md-center">
-                            <Col xs lg="6">
-                            <Form>
-                                <Form.Group controlId="formName">
-                                <Form.Label>Name</Form.Label>
-                                <Form.Control type="text" placeholder="Input name" 
-                                    onChange={(e) => SetName(e.target.value)}/>
-                                </Form.Group>
-
-                                <Form.Group controlId="formDescription">
-                                <Form.Label>Description</Form.Label>
-                                <Form.Control type="text" placeholder="Input short description" 
-                                    onChange={(e) => SetDescription(e.target.value)}/>
-                                </Form.Group>
-
-                                <Form.Group controlId="formPrice">
-                                <Form.Label>Price</Form.Label>
-                                <Form.Control type="number" placeholder="Input price" 
-                                    onChange={(e) => SetPrice(e.target.value)}/>
-                                </Form.Group>
-
-                                <Form.Group controlId="formDiscount">
-                                <Form.Label>Discount</Form.Label>
-                                <Form.Control type="number" placeholder="Input discount" 
-                                    onChange={(e) => SetDiscount(e.target.value)}/>
-                                </Form.Group>
-
-                                <Form.Group controlId="formNumber">
-                                <Form.Label>Amount</Form.Label>
-                                <Form.Control type="number" placeholder="Input number" 
-                                    onChange={(e) => SetNumber(e.target.value)}/>
-                                </Form.Group>
-
-                                <Form.Group controlId="formImages">
-                                <Form.Label>Images</Form.Label>
-                                <Form.Control type="file" multiple onChange={handleImageUpload} />
-                                </Form.Group>
-
-                                <Form.Group controlId="formSelect">
-                                    <Form.Label>Sizes</Form.Label>
-                                    <Select
-                                        isMulti
-                                        options={options}
-                                        className="basic-multi-select"
-                                        classNamePrefix="select"
-                                        onChange={handleChange}
-                                        value={selectedOpth}
-                                    />
-                                </Form.Group>
-
-                                <Form.Group controlId="formSelect">
-                                    <Form.Label>Type</Form.Label>
-                                    <Select
-                                        options={opthTypes}
-                                        onChange={handleChangeType}
-                                        value={selectedType}
-                                    />
-                                </Form.Group>
-
-                                <Button variant="primary" style={{margin: "10px 0px"}} onClick={async () => await createProduct()}>
-                                    Create
-                                </Button>
-                            </Form>
-                            </Col>
-                        </Row>
-                    </Container>
-                    <ProductTable products={products}/>
+                    <ProductTable products={products} delClick={(item) => DeleteProduct(item)}
+                        editClick={(item) => {SetSelectedProd(item); setModalVisible(true)}}/>
                 </div>
             )}
             {page && (
                 <div>                                
-                    <OrderTable orders={orders}/>
+                    <OrderTable orders={orders} updateOrder={(item) => UpdateOrder(item)}/>
                 </div>
             )}
         </div>

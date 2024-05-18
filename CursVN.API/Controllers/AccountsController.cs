@@ -48,7 +48,8 @@ namespace CursVN.API.Controllers
         [HttpGet("GetUsers")]
         public IActionResult GetUsers()
         {
-
+            var result = _userService.GetUsers();
+            return Ok(result);
         }
     }
 }

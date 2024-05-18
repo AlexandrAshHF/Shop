@@ -171,12 +171,15 @@ namespace CursVN.API.Controllers
         {
             List<string>imgLinks = new List<string>();
 
-            foreach (var item in request.ImageLinks)
+            if (request.Images != null)
             {
-                using (MemoryStream ms = new MemoryStream())
+                foreach (var item in request.Images)
                 {
-                    await item.CopyToAsync(ms);
-                    imgLinks.Add(await _imageService.Upload(ms));
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        await item.CopyToAsync(ms);
+                        imgLinks.Add(await _imageService.Upload(ms));
+                    }
                 }
             }
 
@@ -202,14 +205,17 @@ namespace CursVN.API.Controllers
                 ?  throw new ArgumentNullException("Id cannot be null")
                 : Guid.Parse(request.Id));
 
-            List<string> imgLinks = product.ImageLinks;
+            List<string> imgLinks = request.ImageLinks ?? new List<string>();
 
-            foreach (var item in request.ImageLinks)
+            if(request.Images != null)
             {
-                using (MemoryStream ms = new MemoryStream())
+                foreach (var item in request.Images)
                 {
-                    await item.CopyToAsync(ms);
-                    imgLinks.Add(await _imageService.Upload(ms));
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        await item.CopyToAsync(ms);
+                        imgLinks.Add(await _imageService.Upload(ms));
+                    }
                 }
             }
 
@@ -233,14 +239,6 @@ namespace CursVN.API.Controllers
         {
             await _productService.Delete(id);
             return Ok(id);
-        }
-
-        [HttpGet("GetUsers")]
-        public IActionResult GetUsers()
-        {
-            var result = _userService.GetUsers();
-
-            return Ok(result);
         }
     }
 }

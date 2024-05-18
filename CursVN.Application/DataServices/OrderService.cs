@@ -21,6 +21,7 @@ namespace CursVN.Application.DataServices
                 Id = order.Id,
                 UserId = order.UserId,
                 DateOfCreate = DateTime.Now,
+                Amount = order.Amount,
                 ProductsOrders = order.Products.Select(x => new OrderProduct
                 {
                     OrderId = order.Id,
@@ -30,6 +31,20 @@ namespace CursVN.Application.DataServices
                 Status = order.Status
             };
 
+            var productsId= order.Products
+                .Select(x => x.ProductId);
+
+            var products = await _context.Products
+                .Where(x => productsId.Contains(x.Id))
+                .ToListAsync();
+
+            foreach (var item in order.Products)
+            {
+                var prodIndex = products.FindIndex(x => x.Id == item.ProductId);
+                products[prodIndex].Number -= (uint)item.NumberOfProducts;
+            }
+
+            _context.UpdateRange(products);
             await _context.AddAsync(entity);
             await _context.SaveChangesAsync();
 
@@ -47,12 +62,13 @@ namespace CursVN.Application.DataServices
             var entities = _context.Orders
                 .AsNoTracking()
                 .Include(x => x.ProductsOrders)
+                .Include(x => x.User)
                 .ToList();
 
             return entities
                 .Select(x => Order.Create(x.Id, x.DateOfCreate, x.Status,
                  x.ProductsOrders.Select(po => ProductInOrder.Create(po.ProductId, po.OrderId, po.NumberOfProducts).Model).ToList(),
-                x.UserId
+                x.Amount, x.UserId
                 ).Model).ToList();
         }
 
@@ -66,7 +82,7 @@ namespace CursVN.Application.DataServices
             return entities
                 .Select(x => Order.Create(x.Id, x.DateOfCreate, x.Status,
                  x.ProductsOrders.Select(po => ProductInOrder.Create(po.ProductId, po.OrderId, po.NumberOfProducts).Model).ToList(),
-                x.UserId
+                x.Amount, x.UserId
                 ).Model).ToList();
         }
 
@@ -80,7 +96,7 @@ namespace CursVN.Application.DataServices
             return entities
                 .Select(x => Order.Create(x.Id, x.DateOfCreate, x.Status,
                  x.ProductsOrders.Select(po => ProductInOrder.Create(po.ProductId, po.OrderId, po.NumberOfProducts).Model).ToList(),
-                x.UserId
+                x.Amount, x.UserId
                 ).Model).ToList();
         }
 
@@ -116,7 +132,7 @@ namespace CursVN.Application.DataServices
             return Order.Create(entity.Id, entity.DateOfCreate, entity.Status,
                 entity.ProductsOrders
                     .Select(x => ProductInOrder.Create(x.ProductId, x.OrderId, x.NumberOfProducts).Model).ToList(),
-                entity.UserId
+                entity.Amount, entity.UserId
                 ).Model;
         }
     }
