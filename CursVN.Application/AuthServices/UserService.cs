@@ -86,5 +86,15 @@ namespace CursVN.Application.AuthServices
 
             return new ModelWrapper<string>(GenerateToken(model.Model), string.Empty, true);
         }
+
+        public List<User> GetUsers()
+        {
+            var entities = _context.Users
+                .Include(x => x.Orders)
+                .ToList();
+
+            return entities.Select(x => User.Create(x.Id, x.Email, x.Password,
+                x.Orders.Select(x => x.Id).ToList()).Model).ToList();
+        }
     }
 }

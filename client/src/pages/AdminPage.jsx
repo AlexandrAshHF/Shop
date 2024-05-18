@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import classes from "./styles/AdminPage.module.css";
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import Select from "react-select";
-import { type } from "@testing-library/user-event/dist/type";
 
 export default function AdminPage({...params})
 {
@@ -104,14 +103,14 @@ export default function AdminPage({...params})
         formData.append("Price", price);
         formData.append("Discount", discount);
         formData.append("Number", number);
-        // Добавьте файлы изображений в formData
+
         for (let i = 0; i < images.length; i++) {
             formData.append("ImageLinks", images[i]);
             console.log(images[i]);
         }
         formData.append("TypeId", selectedType.value);
         console.log(selectedType.value);
-        // Добавьте значения параметров в formData
+
         for (let i = 0; i < opthTypes.length; i++){
             console.log(opthTypes[i].value)
             formData.append("ParamValues", opthTypes[i].value);
@@ -127,6 +126,27 @@ export default function AdminPage({...params})
     
         if(response.ok)
             window.location.reload();
+    }
+
+    async function UpdateOrder(order){
+        let nextStatus = order.status + 1;
+
+        if(nextStatus > 3)
+            return;
+
+        let response = await fetch("https://localhost:7265/api/Orders/UpdateOrder", {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"id": order.id, "status": nextStatus})
+        });
+
+        if(response.ok)
+            window.location.reload();
+
+        else
+            console.log(await response.json())
     }
 
     useEffect(() =>{
@@ -214,7 +234,9 @@ export default function AdminPage({...params})
                 </div>
             )}
             {page && (
-                <OrderTable orders={orders}/>
+                <div>                                
+                    <OrderTable orders={orders}/>
+                </div>
             )}
         </div>
     )

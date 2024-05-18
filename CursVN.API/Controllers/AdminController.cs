@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using CursVN.API.DTOs.Requests.Admin;
 using CursVN.API.Filters;
+using CursVN.Core.Abstractions.AuthServices;
 using CursVN.Core.Abstractions.DataServices;
 using CursVN.Core.Abstractions.Other;
 using CursVN.Core.Models;
@@ -20,8 +21,8 @@ namespace CursVN.API.Controllers
         private IParameterService _parameterService;
         private IProductService _productService;
         private IImageService _imageService;
-        private string adminKey;
-        public AdminController(ICategoryService categoryService, ITypeService typeService, IConfiguration configuration,
+        private IUserService _userService;
+        public AdminController(ICategoryService categoryService, ITypeService typeService, IUserService userService,
             IParameterService parameterService, IProductService productService, IImageService imageService)
         {
             _categoryService = categoryService;
@@ -29,16 +30,12 @@ namespace CursVN.API.Controllers
             _parameterService = parameterService;
             _productService = productService;
             _imageService = imageService;
-            adminKey = configuration["AdminKey"];
         }
 
         [HttpPost("CheckKey")]
-        public IActionResult CheckKey(string key)
+        public IActionResult CheckKey()
         {
-            if (key == adminKey)
-                return Ok();
-
-            return BadRequest();
+            return Ok();
         }
 
         [HttpPut("CreateCategory")]
@@ -236,6 +233,14 @@ namespace CursVN.API.Controllers
         {
             await _productService.Delete(id);
             return Ok(id);
+        }
+
+        [HttpGet("GetUsers")]
+        public IActionResult GetUsers()
+        {
+            var result = _userService.GetUsers();
+
+            return Ok(result);
         }
     }
 }

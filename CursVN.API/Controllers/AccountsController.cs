@@ -44,5 +44,11 @@ namespace CursVN.API.Controllers
 
             return BadRequest(result.ErrorMessage);
         }
+
+        [HttpGet("GetUsers")]
+        public IActionResult GetUsers()
+        {
+
+        }
     }
 }

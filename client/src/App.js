@@ -8,6 +8,7 @@ import ProductPage from "./pages/ProductPage";
 import ProfilePage from "./pages/ProfilePage";
 import AuthPage from "./pages/AuthPage";
 import BasketPage from "./pages/BasketPage"
+import FullOrderPage from "./pages/FullOrderPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/profile/:userId" element={<ProfilePage />} />
         <Route path="/account/:type" element={<AuthPage />} />
         <Route path="/basket" element={<BasketPage/>}/>
+        <Route path="/order/:orderId" element={<FullOrderPage/>}/>
         <Route path="*" element={<CategoryPage />} />
       </Routes>
     </BrowserRouter>
