@@ -13,7 +13,7 @@ export default function ProductTable({products, editClick, delClick, ...params})
                             <th style={{width:60}}>Price</th>
                             <th style={{width:60}}>Discount</th>
                             <th style={{width:200}}>ImageLinks</th>
-                            <th>Actions</th>
+                            <th style={{width: 200}}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,7 +28,11 @@ export default function ProductTable({products, editClick, delClick, ...params})
                             </td>
                             <td style={{whiteSpace: "normal"}}>{item.price}</td>
                             <td style={{whiteSpace: "normal"}}>{item.discount}</td>
-                            <td style={{whiteSpace: "normal"}}>{item.imageLinks}</td>
+                            <td style={{whiteSpace: "normal"}}>
+                                {item.imageLinks.map((item) => (
+                                    <p>{item}</p>
+                                ))}
+                            </td>
                             <td style={{display: "flex", flexDirection: "column", alignItems: "center",
                                 gap: 5}}>
                                 <Button style={{width: 100}} variant="primary" onClick={() => editClick(item)}>Edit</Button>{' '}

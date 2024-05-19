@@ -20,6 +20,7 @@ namespace CursVN.Application.DataServices
             {
                 Id = parameter.Id,
                 Name = parameter.Name,
+                AllowValues = parameter.AllowValues,
                 Types = await _context.Types
                     .Where(x => parameter.TypesId.Contains(x.Id))
                     .ToListAsync()
@@ -46,7 +47,7 @@ namespace CursVN.Application.DataServices
                 .Include(x => x.Types)
                 .ToList();
 
-            return entities.Select(x => Parameter.Create(x.Id, x.Name,
+            return entities.Select(x => Parameter.Create(x.Id, x.Name, x.AllowValues,
                 x.Types.Select(t => t.Id).ToList())
             .Model).ToList();
         }
@@ -58,7 +59,7 @@ namespace CursVN.Application.DataServices
                 .Include(x => x.Types)
                 .FirstAsync(x => x.Id == id);
 
-            return Parameter.Create(entity.Id, entity.Name, entity.Types
+            return Parameter.Create(entity.Id, entity.Name, entity.AllowValues, entity.Types
                 .Select(x => x.Id).ToList()).Model;
         }
 
@@ -80,6 +81,7 @@ namespace CursVN.Application.DataServices
             }
 
             entity.Name = parameter.Name;
+            entity.AllowValues = parameter.AllowValues;
             _context.Parameters.Update(entity);
             await _context.SaveChangesAsync();
 

@@ -15,6 +15,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route index element={<CategoryPage />} />
+        <Route path="/admin/:adminKey/:page" element={<AdminPage />} />
         <Route path="/admin/:adminKey" element={<AdminPage />} />
         <Route path="/catalog/*" element={<CatalogPage />} />
         <Route path="/catalog/:categoryId/*" element={<CatalogPage />} />
@@ -22,7 +23,7 @@ function App() {
         <Route path="/category/*" element={<CategoryPage />} />
         <Route path="/category/:categoryId" element={<CategoryPage />} />
         <Route path="/product/:productId" element={<ProductPage />} />
-        <Route path="/profile/:userId" element={<ProfilePage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/account/:type" element={<AuthPage />} />
         <Route path="/basket" element={<BasketPage/>}/>
         <Route path="/order/:orderId" element={<FullOrderPage/>}/>

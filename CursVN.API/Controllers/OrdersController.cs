@@ -44,7 +44,7 @@ namespace CursVN.API.Controllers
         }
 
         [HttpPost("CreateOrder")]
-        public async Task<IActionResult> CreateOrder([FromBody] List<Guid> productsId)
+        public async Task<IActionResult> CreateOrder([FromBody] List<CreateOrderRequest> productsId)
         {
             var userId = User.FindFirst("userId")?.Value;
             decimal amount = 0;
@@ -57,14 +57,14 @@ namespace CursVN.API.Controllers
 
             for (int i = 0; i < productsId.Count; i++)
             {
-                if(pio.FirstOrDefault(x => x.Item1 == productsId[i]) == null)
+                if(pio.FirstOrDefault(x => x.Item1 == productsId[i].Id) == null)
                 {
-                    pio.Add(new Tuple<Guid, int>(productsId[i], 1));
+                    pio.Add(new Tuple<Guid, int>(productsId[i].Id, 1));
                 }
                 else
                 {
-                    int index = pio.FindIndex(x => x.Item1 == productsId[i]);
-                    pio[index] = new Tuple<Guid, int>(productsId[i], pio[index].Item2);
+                    int index = pio.FindIndex(x => x.Item1 == productsId[i].Id);
+                    pio[index] = new Tuple<Guid, int>(productsId[i].Id, pio[index].Item2);
                 }
             }
 

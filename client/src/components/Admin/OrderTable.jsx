@@ -6,7 +6,6 @@ export default function OrderTable({orders, updateOrder, ...params}){
 
     return(
         <div {...params}>
-            {orders.map((item) => (
                 <Table style={{backgroundColor: "lightgray"}}>
                     <thead>
                         <tr>
@@ -17,21 +16,17 @@ export default function OrderTable({orders, updateOrder, ...params}){
                         </tr>
                     </thead>
                     <tbody>
+                    {orders.map((item) => (
                         <tr>
                             <td>{item.dateOfCreate}</td>
                             <td>{statusList[item.status]}</td>
                             <td>{item.amount}</td>
                             <td>
-                                <Button variant="primary" onClick={(item) => updateOrder(item)}>Status Up</Button>
-                                <Button variant="primary" 
-                                    onClick={(item) => window.location = `/order/${item.id}`}>
-                                        More Details
-                                    </Button>
+                                <Button variant="primary" onClick={() => updateOrder(item)}>Status Up</Button>
                             </td>
-                        </tr>
+                        </tr>))}
                     </tbody>
                 </Table>
-            ))}
         </div>
     )
 }

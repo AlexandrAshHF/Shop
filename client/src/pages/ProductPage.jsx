@@ -1,19 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./styles/ProductPage.module.css";
 import Select from 'react-select';
+import { useParams } from "react-router-dom";
 
 export default function ProductPage({...params})
 {
-    const[type, SetType] = useState();
-    const[product, SetProduct] = useState({id: 1, name: "name", description: "descriptiron321312312123132132123123132132 1 2 4 5 6 60234023", price: 12.5, discount: 0.3, 
-    imageLinks: ["https://upload.wikimedia.org/wikipedia/en/thumb/e/e2/IMG_Academy_Logo.svg/1200px-IMG_Academy_Logo.svg.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFXOOcZnaslyfjPTGV4q_PlLC9Ypmg8kzTgBP5Nrg_FA&s"]});
-    const[parameter, SetParameters] = useState([]);
-    const[currentImg, SetCurrentImg] = useState();
-    const[selectSize, SetSize] = useState();
-    const price = 0;
+    const {productId} = useParams();
+
+    const[product, SetProduct] = useState(null);
+
+    const[currentImg, SetCurrentImg] = useState(0);
+    const[selectedSize, SetSelectedSize] = useState(null);
+    const[options, SetOptions] = useState();
+
+    const handleSizeChange = (size) => {
+        SetSelectedSize(size.value);
+    };
 
     function switchImg(side) {
-        if(currentImg + side > product.imageLinks.length)
+        if(currentImg + side > product.imageLinks.length - 1)
             SetCurrentImg(0);
 
         else if(currentImg + side < 0)
@@ -24,37 +29,105 @@ export default function ProductPage({...params})
             let copy = currentImg + side;
             SetCurrentImg(copy);
         }
+    };
+
+    async function fetchProduct() {
+        console.log("fetch");
+        let response = await fetch(`https://localhost:7265/api/Catalog/GetById?id=${productId}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if(response.ok)
+        {
+            let data = await response.json();
+            SetProduct(data);
+            SetOptions(data.paramValues[0].map(size => ({ value: size, label: size })));
+        }
     }
+
+    function addToBasket(){
+        if(selectedSize)
+        {
+            if(product.number < 1)
+            {
+                console.log("product number < 1");
+                return;
+            }
+
+            let basket = localStorage.getItem("basket") 
+                ? JSON.parse(localStorage.getItem("basket"))
+                : [];
+
+            if(basket.length > 0)
+            {
+                basket.push({product: product, size: selectedSize});
+                localStorage.removeItem("basket");
+                localStorage.setItem("basket", JSON.stringify(basket));
+            }
+            else
+            {
+                basket.push({product: product, size: selectedSize});
+                localStorage.setItem("basket", JSON.stringify(basket));
+            }
+
+            window.history.back();
+        }
+        else
+        {
+            alert("Select type");
+        }
+    }
+
+    useEffect(() => {
+        console.log("UseEffect");
+        fetchProduct();
+        //console.log(product.imageLinks);
+        if(product)
+            console.log(product.paramValues);
+    }, []);
 
     return(
         <div {...params} className={classes.main}>
-            <div className={classes.imgBlock}>
-                <img alt="product" src={product.imageLinks[currentImg]}/>
-                <div className={classes.switcherImg}>
-                    <button onClick={() => switchImg(1)}>Next</button>
-                    <button onClick={() => switchImg(-1)}>Prev</button>
+        {product ? (
+            <>
+                <div className={classes.imgBlock}>
+                    <img alt="product" src={product.imageLinks[currentImg]}/>
+                    <div className={classes.switcherImg}>
+                        <button onClick={() => switchImg(-1)}>Prev</button>
+                        <button onClick={() => switchImg(1)}>Next</button>
+                    </div>
                 </div>
-            </div>
-            <div className={classes.actionBlock}>
-                <label className={classes.name}>{product.name}</label>
-                <div style={{width: "80%"}}>
-                    <label className={classes.desc}>{product.description}</label>
+                <div className={classes.actionBlock}>
+                    <label className={classes.name}>{product.name}</label>
+                    <div style={{width: "80%"}}>
+                        <label className={classes.desc}>{product.description}</label>
+                    </div>
+                    <div className={classes.priceBlock}>
+                        <label className={classes.truePrice}>${product.price}</label>
+                        <label className={classes.disc}>- {product.discount}%</label>
+                        <label className={classes.price}>${
+                            (product.price - (product.price * (product.discount/100)))
+                        }
+                        </label>
+                    </div>
+                    {product.number < 1 && (
+                        <label>This product is out of stock</label>
+                    )}
+                    <div className={classes.action}>
+                        <button className={classes.bascketBtn} onClick={() => addToBasket()}>
+                            Add to bascket
+                        </button>
+                        <Select options={options} className={classes.sizeLine}
+                            onChange={handleSizeChange} value={{value: selectedSize, label: selectedSize}}/>
+                    </div>
                 </div>
-                <div className={classes.priceBlock}>
-                    <label className={classes.truePrice}>${product.price}</label>
-                    <label className={classes.disc}>- {product.discount*100}%</label>
-                    <label className={classes.price}>${price.toFixed(2)}</label>
-                </div>
-                <div className={classes.action}>
-                    <button className={classes.bascketBtn}>
-                        Add to bascket
-                    </button>
-                    <Select options={parameter} className={classes.sizeLine}/>
-                </div>
-            </div>
-            <div className={classes.paramsBlock}>
-                
-            </div>
-        </div>
+            </>
+        ) : (
+            <div>Loading...</div>
+        )}
+    </div>
     )
 }

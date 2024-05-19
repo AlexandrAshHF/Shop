@@ -66,11 +66,18 @@ namespace CursVN.Application.DataServices
 
         public List<Product> GetByCategoryId(Guid id)
         {
+            var typesId = _context.Types
+                .AsNoTracking()
+                .Where(x => x.CategoryId == id)
+                .Select(X => X.Id)
+                .ToList();
+
             var entities = _context.Products
                 .AsNoTracking()
-                .Include(x => x.ParamValues)
-                .Where(x => x.TypeId == id)
+                .Include(x=> x.ParamValues)
+                .Where(x => typesId.Contains(x.TypeId))
                 .ToList();
+
 
             return entities.Select(
                     x => Product.Create(x.Id, x.Name, x.Description, x.Price, x.Discount, x.Number,
@@ -81,7 +88,8 @@ namespace CursVN.Application.DataServices
         public async Task<Product> GetById(Guid id)
         {
             var entity = await _context.Products
-                .Include(x => x.ParamValues)
+                .AsNoTracking()
+                .Include(x => x.ParamValues).AsNoTracking()
                 .SingleAsync(x => x.Id == id);
 
             List<List<string>> list = new List<List<string>>();
@@ -138,6 +146,7 @@ namespace CursVN.Application.DataServices
                 ImageLinks = product.ImageLinks,
                 Number = product.Number,
                 ParamValues = await _context.ParamValues
+                    .AsNoTracking()
                     .Where(x => x.ProductEntityId == product.Id)
                     .ToListAsync(),
                 Price = product.Price,

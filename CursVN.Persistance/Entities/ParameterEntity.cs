@@ -4,6 +4,7 @@
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public List<string>? AllowValues { get; set; }
         public List<TypeEntity> Types { get; set; }
     }
 }

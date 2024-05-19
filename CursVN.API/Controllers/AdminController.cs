@@ -97,7 +97,7 @@ namespace CursVN.API.Controllers
         [HttpPut("CreateParameter")]
         public async Task<IActionResult> CreateParameter([FromBody] ParameterRequest request)
         {
-            var model = Parameter.Create(Guid.NewGuid(), request.Name, request.TypesId ?? new List<Guid>());
+            var model = Parameter.Create(Guid.NewGuid(), request.Name, request.AllowValues, request.TypesId ?? new List<Guid>());
 
             if (model.IsValid)
             {
@@ -111,7 +111,7 @@ namespace CursVN.API.Controllers
         [HttpPatch("UpdateParameter")]
         public async Task<IActionResult> UpdateParameter([FromBody] ParameterRequest request)
         {
-            var model = Parameter.Create(Guid.Parse(request.Id), request.Name, request.TypesId ?? new List<Guid>());
+            var model = Parameter.Create(Guid.Parse(request.Id), request.Name, request.AllowValues, request.TypesId ?? new List<Guid>());
 
             if (model.IsValid)
             {

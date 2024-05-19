@@ -1,16 +1,33 @@
 .main{
-    height: 35px;
+    display: flex;
+    flex-direction: row;
+
+    height: 50px;
     width: 100%;
     padding: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 
     box-shadow: -10px 0px 5px gray;
+
+    align-items: center;
 }
 
-.searchLine{
+.searchLine{    
+    width: 400px;
+    text-align: center;
     outline: none;
     border: 1px solid rgb(188, 188, 188);
     border-radius: 10px;
 
     text-align: center;
+
+    margin-right: 10px;
+    margin-left: 425px;
+}
+
+.main button{
+    outline: none;
+    border: 1px solid gray;
+    border-radius: 5px;
+    background-color: transparent;
 }

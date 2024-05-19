@@ -19,7 +19,7 @@ namespace CursVN.Application.DataServices
             {
                 Id = category.Id,
                 Name = category.Name,
-                Types = await _context.Types
+                Types = await _context.Types.AsNoTracking()
                     .Where(x => category.TypesId.Contains(x.Id))
                     .ToListAsync(),
                 ImageLink = category.ImageLink,
@@ -34,6 +34,7 @@ namespace CursVN.Application.DataServices
         public async Task Delete(Guid id)
         {
             var types = await _context.Types
+                .AsNoTracking()
                 .Where(x => x.CategoryId == id)
                 .ToListAsync();
 
@@ -78,7 +79,7 @@ namespace CursVN.Application.DataServices
             {
                 Id = category.Id,
                 Name = category.Name,
-                Types = await _context.Types
+                Types = await _context.Types.AsNoTracking()
                     .Where(x => category.TypesId.Contains(x.Id))
                     .ToListAsync(),
                 ImageLink = category.ImageLink,

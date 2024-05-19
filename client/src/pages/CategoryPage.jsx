@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import classes from "./styles/CategoryPage.module.css"
+import LayoutUser from "../components/LayoutUser";
 
 export default function CategoryPage({...params})
 {
@@ -29,6 +30,7 @@ export default function CategoryPage({...params})
 
     return(
         <div {...params} className={classes.main}>
+            <LayoutUser style={{marginBottom: 0}}/>
             {categories.map((item) => (
                 <button key={item.id} className={classes.item} onClick={() => clickBlock(item)}>
                     <img alt="category" src={item.imageLink} className={classes.img}/>

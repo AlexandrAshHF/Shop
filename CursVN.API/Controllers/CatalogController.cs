@@ -42,5 +42,12 @@ namespace CursVN.API.Controllers
             var result = _productService.GetByTypeId(request.id);
             return Ok(result);
         }
+
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetById([FromQuery]Guid id)
+        {
+            var result = await _productService.GetById(id);
+            return Ok(result);
+        }
     }
 }

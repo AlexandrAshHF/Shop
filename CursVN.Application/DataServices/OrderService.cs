@@ -22,13 +22,14 @@ namespace CursVN.Application.DataServices
                 UserId = order.UserId,
                 DateOfCreate = DateTime.Now,
                 Amount = order.Amount,
-                ProductsOrders = order.Products.Select(x => new OrderProduct
+                ProductsOrders = order.Products
+                .Select(x => new OrderProduct
                 {
                     OrderId = order.Id,
                     ProductId = x.ProductId,
                     NumberOfProducts = x.NumberOfProducts,
                 }).ToList(),
-                Status = order.Status
+                Status = order.Status,
             };
 
             var productsId= order.Products

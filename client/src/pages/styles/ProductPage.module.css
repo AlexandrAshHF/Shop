@@ -26,13 +26,18 @@
 
 }
 
+.imgBlock img{
+    width: 100%;
+    height: 500px;
+}
+
 .switcherImg{
     display: flex;
     flex-direction: row;
 
     margin: auto;
 
-    gap: 300px;
+    gap: 385px;
 }
 
 .switcherImg button{

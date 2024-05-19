@@ -9,8 +9,7 @@ import ModalProduct from "../components/Product/ModalProduct";
 
 export default function AdminPage({...params})
 {
-    const[page, SetPage] = useState(false);
-    const {adminKey} = useParams();
+    const {adminKey, page} = useParams();
 
     const[selectedProd, SetSelectedProd] = useState(null);
 
@@ -68,6 +67,8 @@ export default function AdminPage({...params})
         if(nextStatus > 3)
             return;
 
+        console.log(order.id);
+        console.log(nextStatus);
         let response = await fetch("https://localhost:7265/api/Orders/UpdateOrder", {
             method: "PATCH",
             headers: {
@@ -84,12 +85,13 @@ export default function AdminPage({...params})
     }
 
     async function DeleteProduct(prod){
+        console.log(prod.id);
         let response = await fetch(`https://localhost:7265/api/Admin/${adminKey}/DeleteProduct`, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',                
             },
-            body: prod.id
+            body: JSON.stringify(prod.id)
         })
 
         if(response.ok)
@@ -112,22 +114,28 @@ export default function AdminPage({...params})
                 closeWindow={() => {setModalVisible(false); SetSelectedProd(null)}}/>
             )}
             <div className={classes.btns}>
-                <Button className={!page ? classes.selected : classes.unselected} onClick={() => SetPage(false)}>Products</Button>
-                <Button className={page ? classes.selected : classes.unselected} onClick={() => SetPage(true)}>Orders</Button>
+                <Button className={page == "products" ? classes.selected : classes.unselected}
+                onClick={() => window.location = `/admin/${adminKey}/products`}>
+                    Products
+                </Button>
+                <Button className={page == "orders" ? classes.selected : classes.unselected}
+                onClick={() => window.location = `/admin/${adminKey}/orders`}>
+                    Orders
+                </Button>
             </div>
             <Button variant="success" onClick={() => {SetSelectedProd(null); setModalVisible(true)}}
                 style={{marginTop: 20, marginBottom: 20, width: 100}}>
                 Create
             </Button>
-            {!page && (
+            {page == "products" && (
                 <div>
-                    <ProductTable products={products} delClick={(item) => DeleteProduct(item)}
+                    <ProductTable products={products} delClick={async (item) => await DeleteProduct(item)}
                         editClick={(item) => {SetSelectedProd(item); setModalVisible(true)}}/>
                 </div>
             )}
-            {page && (
+            {page == "orders" && (
                 <div>                                
-                    <OrderTable orders={orders} updateOrder={(item) => UpdateOrder(item)}/>
+                    <OrderTable orders={orders} updateOrder={async (item) => await UpdateOrder(item)}/>
                 </div>
             )}
         </div>
