@@ -29,6 +29,9 @@ export default function BasketPage({...props}){
             SetProducts([]);
             window.location.reload();
         }
+        
+        else
+            window.location = "/account/signIn";
     }
 
     function delFromBasket(item){

@@ -63,21 +63,44 @@ namespace CursVN.Application.DataServices
                     x.ImageLinks, x.TypeId, x.ParamValues.Select(pv => pv.Values).ToList()
                     ).Model).ToList();
         }
-
-        public List<Product> GetByCategoryId(Guid id)
+        public List<Product> GetRange(int page, int limit)
         {
-            var typesId = _context.Types
+            var entities = _context.Products
+                .Include(x => x.ParamValues)
+                .ToList();
+
+            return entities
+                .GetRange(page * limit, limit)
+                .Select(x => Product.Create
+                    (
+                        id: x.Id,
+                        name: x.Name,
+                        description: x.Description,
+                        price: x.Price,
+                        discount: x.Discount,
+                        number: x.Number,
+                        imageLinks: x.ImageLinks,
+                        typeId: x.TypeId,
+                        paramValues: x.ParamValues.Select(x => x.Values).ToList()
+                    ).Model).ToList();
+        }
+
+        public async Task<List<Product>> GetByCategoryId(Guid id, int? page, int? limit)
+        {
+            var typesId = await _context.Types
                 .AsNoTracking()
                 .Where(x => x.CategoryId == id)
                 .Select(X => X.Id)
-                .ToList();
+                .ToListAsync();
 
-            var entities = _context.Products
+            var entities = await _context.Products
                 .AsNoTracking()
                 .Include(x=> x.ParamValues)
                 .Where(x => typesId.Contains(x.TypeId))
-                .ToList();
+                .ToListAsync();
 
+            if (page != null && limit != null)
+                entities = entities.GetRange((int)(page * limit), (int)limit);
 
             return entities.Select(
                     x => Product.Create(x.Id, x.Name, x.Description, x.Price, x.Discount, x.Number,
@@ -121,13 +144,16 @@ namespace CursVN.Application.DataServices
                     ).Model).ToList();
         }
 
-        public List<Product> GetByTypeId(Guid id)
+        public async Task<List<Product>> GetByTypeId(Guid id, int? page, int? limit)
         {
-            var entities = _context.Products
+            var entities = await _context.Products
                 .AsNoTracking()
                 .Include(x => x.ParamValues)
                 .Where(x => x.TypeId == id)
-                .ToList();
+                .ToListAsync();
+
+            if (page != null && limit != null)
+                entities = entities.GetRange((int)(page * limit), (int)limit);
 
             return entities.Select(
                     x => Product.Create(x.Id, x.Name, x.Description, x.Price, x.Discount, x.Number,

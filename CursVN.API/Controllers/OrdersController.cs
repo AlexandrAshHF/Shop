@@ -1,4 +1,5 @@
 ﻿using CursVN.API.DTOs.Requests.Order;
+using CursVN.API.Filters;
 using CursVN.Core.Abstractions.DataServices;
 using CursVN.Core.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -9,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 namespace CursVN.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class OrdersController : ControllerBase
     {
@@ -22,6 +24,8 @@ namespace CursVN.API.Controllers
             _pioService = pioService;
         }
 
+        [AllowAnonymous]
+        [TypeFilter<AdminFilter>]
         [HttpGet("GetAll")]
         public IActionResult GetAll()
         {
@@ -83,6 +87,8 @@ namespace CursVN.API.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
+        [TypeFilter<AdminFilter>]
         [HttpPatch("UpdateOrder")]
         public async Task<IActionResult> UpdateOrder([FromBody] UpdateOrderRequest request)
         {

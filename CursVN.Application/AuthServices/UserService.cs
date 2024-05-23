@@ -96,5 +96,16 @@ namespace CursVN.Application.AuthServices
             return entities.Select(x => User.Create(x.Id, x.Email, x.Password,
                 x.Orders.Select(x => x.Id).ToList()).Model).ToList();
         }
+
+        public async Task<User> GetById(Guid id)
+        {
+            var user = await _context.Users
+                .AsNoTracking()
+                .Include(x => x.Orders)
+                .SingleAsync(x => x.Id == id);
+
+            return User.Create(user.Id, user.Email, user.Password,
+                user.Orders.Select(x => x.Id).ToList()).Model;
+        }
     }
 }

@@ -26,20 +26,21 @@ namespace CursVN.API.Controllers
         [HttpGet("GetRangeFromAll")]
         public IActionResult GetRangeFromAll([FromQuery]RangeRequest request)
         {
+            var result = _productService.GetRange(request.Page, request.Limit);
             return Ok();
         }
 
         [HttpGet("GetByCategory")]
-        public IActionResult GetByCategoryId([FromQuery]FromAnyRequest request)
+        public async Task<IActionResult> GetByCategoryId([FromQuery]FromAnyRequest request)
         {
-            var result = _productService.GetByCategoryId(request.id);
+            var result = await _productService.GetByCategoryId(request.id, request.Range.Page, request.Range.Limit);
             return Ok(result);
         }
 
         [HttpGet("GetByType")]
-        public IActionResult GetByTypeId([FromQuery]FromAnyRequest request)
+        public async Task<IActionResult> GetByTypeId([FromQuery]FromAnyRequest request)
         {
-            var result = _productService.GetByTypeId(request.id);
+            var result = await _productService.GetByTypeId(request.id, request.Range.Page, request.Range.Limit);
             return Ok(result);
         }
 
