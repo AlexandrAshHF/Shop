@@ -84,7 +84,9 @@ namespace CursVN.Application.AuthServices
             await _context.Users.AddAsync(entity);
             await _context.SaveChangesAsync();
 
-            return new ModelWrapper<string>(GenerateToken(model.Model), string.Empty, true);
+            int code = new Random().Next(1000, 9999);
+
+            return new ModelWrapper<string>(code.ToString(), string.Empty, true);
         }
 
         public List<User> GetUsers()

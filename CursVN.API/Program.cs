@@ -18,6 +18,10 @@ builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServe
 builder.Services.AddDataServices();
 builder.Services.AddAuthServices();
 builder.Services.AddScoped<IImageService, ImgBBService>(x => new ImgBBService(builder.Configuration["ApiKey"].ToString()));
+builder.Services.AddScoped<IEmailService, EmailService>(x => new EmailService(
+        sender: builder.Configuration.GetSection("Email")["Address"],
+        password: builder.Configuration.GetSection("Email")["Password"]
+    ));
 
 var app = builder.Build();
 

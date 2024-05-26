@@ -1,6 +1,7 @@
 ﻿using CursVN.API.DTOs.Requests.Account;
 using CursVN.API.Filters;
 using CursVN.Core.Abstractions.AuthServices;
+using CursVN.Core.Abstractions.Other;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,9 +15,11 @@ namespace CursVN.API.Controllers
     public class AccountsController : ControllerBase
     {
         private IUserService _userService;
-        public AccountsController(IUserService userService)
+        private IEmailService _emailService;
+        public AccountsController(IUserService userService, IEmailService emailService)
         {
             _userService = userService;
+            _emailService = emailService;
         }
 
         [HttpPost("SignIn")]
@@ -40,7 +43,8 @@ namespace CursVN.API.Controllers
 
             if (result.IsValid)
             {
-                string response = "Bearer " + result.Model;
+                string response = result.Model;
+                await _emailService.SendMail(response, request.Email);
                 return Ok(response);
             }
 
