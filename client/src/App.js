@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AdminPage from "./pages/AdminPage";
 import CatalogPage from "./pages/CatalogPage";
 import CategoryPage from "./pages/CategoryPage";
-import DefaultPage from "./pages/DefaultPage";
 import ProductPage from "./pages/ProductPage";
 import ProfilePage from "./pages/ProfilePage";
 import AuthPage from "./pages/AuthPage";

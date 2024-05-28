@@ -2,6 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+/*
+    Конторллер отвечает за извлечение типов, параметров, категорий из БД. 
+    "By" используется так же как в ProductController
+ */
+
 namespace CursVN.API.Controllers
 {
     [Route("api/[controller]")]

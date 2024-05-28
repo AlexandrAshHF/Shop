@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 
+/*
+    Контроллер аккаунта отвечает за вход, регистрацию, отправления кода на почту
+ */
+
 namespace CursVN.API.Controllers
 {
     [Route("api/[controller]")]
@@ -51,7 +55,7 @@ namespace CursVN.API.Controllers
             return BadRequest(result.ErrorMessage);
         }
 
-        [HttpPost("Confirmation")]
+        [HttpPost("Confirmation")] //подтверждение аккаунта с помощью кода
         public async Task<IActionResult> ConfirmUser([FromBody] int confCode)
         {
             var result = await _userService.ConfirmUser(confCode);

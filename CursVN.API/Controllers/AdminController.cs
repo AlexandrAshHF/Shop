@@ -9,6 +9,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
+/*
+    Класс для админа, который отвечает за создание параметров, типов, категории, продукты
+    Вход осуществляется по ключу используя AdminFilter
+*/
+
 namespace CursVN.API.Controllers
 {
     [Route("api/[controller]/{secretKey}")]
@@ -32,6 +37,7 @@ namespace CursVN.API.Controllers
             _imageService = imageService;
         }
 
+        //Проверка на верность ключа админа
         [HttpPost("CheckKey")]
         public IActionResult CheckKey()
         {

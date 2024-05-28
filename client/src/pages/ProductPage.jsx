@@ -77,7 +77,7 @@ export default function ProductPage({...params})
         }
         else
         {
-            alert("Select type");
+            alert("Select size");
         }
     }
 

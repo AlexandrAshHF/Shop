@@ -1,6 +1,8 @@
 using CursVN.API.DI;
+using CursVN.Application.DocumentServices.Excel;
 using CursVN.Application.Other;
 using CursVN.Core.Abstractions.Other;
+using CursVN.Core.Models;
 using CursVN.Persistance;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -17,11 +19,17 @@ builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServe
 
 builder.Services.AddDataServices();
 builder.Services.AddAuthServices();
-builder.Services.AddScoped<IImageService, ImgBBService>(x => new ImgBBService(builder.Configuration["ApiKey"].ToString()));
+
+builder.Services.AddScoped<IImageService, ImgBBService>(x => new ImgBBService(
+    builder.Configuration["ApiKey"].ToString()
+    ));
+
 builder.Services.AddScoped<IEmailService, EmailService>(x => new EmailService(
         sender: builder.Configuration.GetSection("Email")["Address"],
         password: builder.Configuration.GetSection("Email")["Password"]
     ));
+
+builder.Services.AddScoped<IDocService<List<Order>>, OrderExcelService>();
 
 var app = builder.Build();
 

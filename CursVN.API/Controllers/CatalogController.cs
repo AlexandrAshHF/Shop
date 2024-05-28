@@ -3,6 +3,10 @@ using CursVN.Core.Abstractions.DataServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+/*
+    Получение продуктов из БД, слово "By" озгначет получение продуктов из БД по параметру, который указан после "By"
+ */
+
 namespace CursVN.API.Controllers
 {
     [Route("api/[controller]")]
@@ -23,12 +27,12 @@ namespace CursVN.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("GetRangeFromAll")]
+/*        [HttpGet("GetRangeFromAll")]
         public IActionResult GetRangeFromAll([FromQuery]RangeRequest request)
         {
             var result = _productService.GetRange(request.Page, request.Limit);
             return Ok();
-        }
+        }*/
 
         [HttpGet("GetByCategory")]
         public async Task<IActionResult> GetByCategoryId([FromQuery]FromAnyRequest request)

@@ -15,6 +15,9 @@ namespace CursVN.Application.DataServices
         }
         public async Task<Guid> Create(Category category)
         {
+            if (category == null)
+                throw new ArgumentException("category is null");
+
             var entity = new CategoryEntity
             {
                 Id = category.Id,
