@@ -6,6 +6,7 @@ import classes from "./styles/AdminPage.module.css";
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import Select from "react-select";
 import ModalProduct from "../components/Product/ModalProduct";
+import OrderModal from "../components/Admin/OrderModal";
 
 export default function AdminPage({...params})
 {
@@ -109,9 +110,12 @@ export default function AdminPage({...params})
 
     return(
         <div {...params} className={classes.main}>
-            {modalVisible && (
+            {(modalVisible && page == "products") && (
                 <ModalProduct product={selectedProd} types={types} adminKey={adminKey} 
                 closeWindow={() => {setModalVisible(false); SetSelectedProd(null)}}/>
+            )}
+            {(modalVisible && page == "orders") && (
+                <OrderModal closeWindow={() => setModalVisible(false)}/>
             )}
             <div className={classes.btns}>
                 <Button className={page == "products" ? classes.selected : classes.unselected}

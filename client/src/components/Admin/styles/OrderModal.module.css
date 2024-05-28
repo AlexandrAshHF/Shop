@@ -1,0 +1,25 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Это значение можно изменить в зависимости от ваших потребностей */
+
+    width: 100%;
+    margin: 30px auto;
+}
+
+.inner{
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: 'center';
+    align-items: 'center';
+}
+
+.pickerBlock{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    margin: 20px auto;
+}
