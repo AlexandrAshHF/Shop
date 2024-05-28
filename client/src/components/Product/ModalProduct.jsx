@@ -5,11 +5,11 @@ import Select from "react-select";
 
 export default function ModalProduct({product, types, adminKey, closeWindow, ...props}){
     const options = [
-        {value: 'XS', label: 'Size XS'},
-        {value: 'S', label: 'Size S'},
-        {value: 'M', label: 'Size M'},
-        {value: 'L', label: 'Size L'},
-        {value: 'XL', label: 'Size XL'},
+        {value: '36', label: '36'},
+        {value: '38', label: '38'},
+        {value: '40', label: '40'},
+        {value: '42', label: '42'},
+        {value: '44', label: '44'},
     ]
 
     const opthTypes = types.map(item => ({

@@ -13,6 +13,10 @@ export default function LayoutUser({...params}){
         window.location = "/basket";
     }
 
+    function authClick(){
+        window.location = "/account/signIn";
+    }
+
     async function adminClick(){
         let key = prompt("Input admin key: ");
 
@@ -37,13 +41,16 @@ export default function LayoutUser({...params}){
             <div>
                 <input type="text" onChange={(e) => setSearchLine(e.target.value)}
                 className={classes.searchLine} placeholder="Search..."/>
-                <button onClick={() => searchClick()} style={{marginRight: 215}}>
+                <button onClick={() => searchClick()} style={{marginRight: 150}}>
                     Search
                 </button>
             </div>
 
             <button style={{marginRight: 10}} onClick={() => profileClick()}>
                 Basket
+            </button>
+            <button style={{marginRight: 10}} onClick={() => authClick()}>
+                SignIn
             </button>
             <button onClick={async () => await adminClick()}>
                 Admin

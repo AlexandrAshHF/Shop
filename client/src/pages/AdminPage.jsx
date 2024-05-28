@@ -48,7 +48,7 @@ export default function AdminPage({...params})
     }
 
     async function fetchOrders(){
-        let response = await fetch("https://localhost:7265/api/Orders/GetAll",{
+        let response = await fetch(`https://localhost:7265/api/Orders/GetAll`,{
             method: "GET",
             headers:{
                 'Content-Type': 'application/json',

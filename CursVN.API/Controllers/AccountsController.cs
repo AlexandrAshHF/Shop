@@ -44,11 +44,22 @@ namespace CursVN.API.Controllers
             if (result.IsValid)
             {
                 string response = result.Model;
-                await _emailService.SendMail(response, request.Email);
+                await _emailService.SendMail($"Your invite code: {response}", request.Email);
                 return Ok(response);
             }
 
             return BadRequest(result.ErrorMessage);
+        }
+
+        [HttpPost("Confirmation")]
+        public async Task<IActionResult> ConfirmUser([FromBody] int confCode)
+        {
+            var result = await _userService.ConfirmUser(confCode);
+
+            var user = await _userService.GetById(result);
+            await _emailService.SendMail("Account activated successfully", user.Email);
+
+            return Ok(result);
         }
 
         [TypeFilter<AdminFilter>]

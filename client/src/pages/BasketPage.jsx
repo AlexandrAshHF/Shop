@@ -13,6 +13,9 @@ export default function BasketPage({...props}){
             window.location = `/account/signIn`;
         }
 
+        if(products.length < 1)
+            return;
+
         let response = await fetch("https://localhost:7265/api/Orders/CreateOrder", {
             method: "POST",
             headers: {

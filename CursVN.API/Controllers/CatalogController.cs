@@ -33,14 +33,14 @@ namespace CursVN.API.Controllers
         [HttpGet("GetByCategory")]
         public async Task<IActionResult> GetByCategoryId([FromQuery]FromAnyRequest request)
         {
-            var result = await _productService.GetByCategoryId(request.id, request.Range.Page, request.Range.Limit);
+            var result = await _productService.GetByCategoryId(request.id, request?.Range?.Page, request?.Range?.Limit);
             return Ok(result);
         }
 
         [HttpGet("GetByType")]
         public async Task<IActionResult> GetByTypeId([FromQuery]FromAnyRequest request)
         {
-            var result = await _productService.GetByTypeId(request.id, request.Range.Page, request.Range.Limit);
+            var result = await _productService.GetByTypeId(request.id, request?.Range?.Page, request?.Range?.Limit);
             return Ok(result);
         }
 

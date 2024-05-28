@@ -108,6 +108,7 @@ namespace CursVN.Application.DataServices
                 Id = order.Id,
                 UserId = order.UserId,
                 DateOfCreate = DateTime.Now,
+                Amount = order.Amount,
                 ProductsOrders = order.Products.Select(x => new OrderProduct
                 {
                     OrderId = order.Id,

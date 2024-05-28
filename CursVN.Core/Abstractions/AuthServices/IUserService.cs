@@ -7,6 +7,7 @@ namespace CursVN.Core.Abstractions.AuthServices
         Task<ModelWrapper<string>> LogIn(string email, string password);
         Task<ModelWrapper<string>> SignUp(string email, string password);
         Task<User> GetById(Guid id);
+        Task<Guid> ConfirmUser(int code);
         List<User>GetUsers();
     }
 }

@@ -51,7 +51,9 @@ export default function AuthPage({...params})
         });
 
         if(response.ok){
-            window.location = "/account/signIn";
+            let data = await response.json();
+            localStorage.setItem("code", data);
+            window.location = "/accountCode";
         }
         else{
             let data = await response.json();

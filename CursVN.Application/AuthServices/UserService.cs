@@ -53,7 +53,8 @@ namespace CursVN.Application.AuthServices
             if(!ComparePassHash(password, user.Password))
                 return new ModelWrapper<string>(string.Empty, "Wrong password", false);
 
-            User model = User.Create(user.Id, user.Email, user.Password, new List<Guid>()).Model;
+            User model = User.Create(user.Id, user.Email, user.Password, user.DateOfReg,
+                user.IsConfirmed, new List<Guid>(), user.ConfirmationCode).Model;
 
             return new ModelWrapper<string>(GenerateToken(model), string.Empty, true);
         }
@@ -68,7 +69,10 @@ namespace CursVN.Application.AuthServices
 
             var hash = GenerateHash(password);
 
-            var model = User.Create(Guid.NewGuid(), email, password, new List<Guid>());
+            int code = new Random().Next(1000, 9999);
+
+            var model = User.Create(Guid.NewGuid(), email, password, 
+                DateTime.Now, false, new List<Guid>(), code);
 
             if (!model.IsValid)
                 return new ModelWrapper<string>(string.Empty, model.ErrorMessage, false);
@@ -78,13 +82,14 @@ namespace CursVN.Application.AuthServices
                 Id = Guid.NewGuid(),
                 Email = email,
                 Password = hash,
+                DateOfReg = DateTime.Now,
+                ConfirmationCode = code,
+                IsConfirmed = false,
                 Orders = new List<OrderEntity>()
             };
 
             await _context.Users.AddAsync(entity);
             await _context.SaveChangesAsync();
-
-            int code = new Random().Next(1000, 9999);
 
             return new ModelWrapper<string>(code.ToString(), string.Empty, true);
         }
@@ -96,7 +101,8 @@ namespace CursVN.Application.AuthServices
                 .ToList();
 
             return entities.Select(x => User.Create(x.Id, x.Email, x.Password,
-                x.Orders.Select(x => x.Id).ToList()).Model).ToList();
+                x.DateOfReg, x.IsConfirmed,
+                x.Orders.Select(x => x.Id).ToList(), x.ConfirmationCode).Model).ToList();
         }
 
         public async Task<User> GetById(Guid id)
@@ -107,7 +113,22 @@ namespace CursVN.Application.AuthServices
                 .SingleAsync(x => x.Id == id);
 
             return User.Create(user.Id, user.Email, user.Password,
-                user.Orders.Select(x => x.Id).ToList()).Model;
+                user.DateOfReg, user.IsConfirmed,
+                user.Orders.Select(x => x.Id).ToList(), user.ConfirmationCode).Model;
+        }
+        public async Task<Guid> ConfirmUser(int code)
+        {
+            var user = await _context.Users
+                .AsNoTracking()
+                .FirstAsync(x => x.ConfirmationCode == code);
+
+            user.IsConfirmed = true;
+            user.ConfirmationCode = 0;
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            return user.Id;
         }
     }
 }
